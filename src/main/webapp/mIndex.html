@@ -8,10 +8,55 @@
           content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <link rel="stylesheet" href="res/jquery-weui/lib/weui.min.css">
     <link rel="stylesheet" href="res/jquery-weui/css/jquery-weui.css">
-    <script src="res/jquery-weui/js/jquery-weui.js"></script>
+    <link rel="stylesheet" href="res/css/mobile.css">
     <script src="res/jquery-weui/lib/jquery-2.1.4.js"></script>
+    <script src="res/jquery-weui/js/jquery-weui.js"></script>
+    <script>
+        $(function () {
+            $('.weui-tabbar__item').on("click", function(){
+                var temp = $('.weui-tab__bd-item--active').html();
+
+                $('.weui-tab__bd-item--active').html(temp+'dddd');
+            });
+        });
+    </script>
 </head>
 <body>
 
+<div class="weui-tab">
+    <div class="weui-tab__bd">
+        <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+            <h1>页面一</h1>
+        </div>
+    </div>
+
+    <div class="weui-tabbar">
+        <a href="#tab1" class="weui-tabbar__item weui-bar__item--on">
+            <span class="weui-badge" style="position: absolute;top: -.4em;right: 1em;">8</span>
+            <div class="weui-tabbar__icon">
+                <img src="res/jquery-weui/demos/images/icon_nav_button.png" alt="">
+            </div>
+            <p class="weui-tabbar__label">微信</p>
+        </a>
+        <a href="#tab1" class="weui-tabbar__item">
+            <div class="weui-tabbar__icon">
+                <img src="res/jquery-weui/demos/images/icon_nav_msg.png" alt="">
+            </div>
+            <p class="weui-tabbar__label">通讯录</p>
+        </a>
+        <a href="#tab1" class="weui-tabbar__item">
+            <div class="weui-tabbar__icon">
+                <img src="res/jquery-weui/demos/images/icon_nav_article.png" alt="">
+            </div>
+            <p class="weui-tabbar__label">发现</p>
+        </a>
+        <a href="#tab1" class="weui-tabbar__item">
+            <div class="weui-tabbar__icon">
+                <img src="res/jquery-weui/demos/images/icon_nav_cell.png" alt="">
+            </div>
+            <p class="weui-tabbar__label">我</p>
+        </a>
+    </div>
+</div>
 </body>
 </html>

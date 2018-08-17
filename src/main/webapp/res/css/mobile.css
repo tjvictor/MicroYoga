@@ -1,0 +1,21 @@
+* {
+    margin: 0;
+    font-family: -apple-system-font,Helvetica Neue,sans-serif;
+    color: #666;
+    font-size: 16px;
+    list-style: none;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-decoration: none;
+    outline: none;
+}
+
+html{
+    height: 100%;
+}
+
+body{
+    background: rgb(245, 245, 245);
+    height: 100%;
+}
