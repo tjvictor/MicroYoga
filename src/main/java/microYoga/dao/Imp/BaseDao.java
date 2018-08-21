@@ -13,6 +13,9 @@ public class BaseDao {
     @Value("${db.connectString}")
     protected String dbConnectString;
 
+    @Value("${db.activity.connectString}")
+    protected String dbActivityConnectString;
+
     public int insert(String insertSql) throws SQLException {
         return update(insertSql);
     }
