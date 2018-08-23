@@ -27,3 +27,4 @@ function callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoad
         }
     });
 }
+

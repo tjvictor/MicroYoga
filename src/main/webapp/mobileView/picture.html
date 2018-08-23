@@ -1,38 +1,29 @@
 <script>
-    $(function() {
-        $('.weui-gallery').on('click', function (){
+    $(function () {
+        $('.weui-gallery').on('click', function () {
             $(this).css('display', 'none');
         });
 
-        $('.yoga-photo-show').on('click', function(){
-            $('.weui-gallery__img').css('background-image', 'url('+$(this).attr('src')+')');
-            $('.weui-gallery').css('display','block');
-        });
+        $('.yoga-photo-browse').on('click', function () {
+            var images = $(this).parent().parent().find('* .yoga-photo-browse');
+            var items = [];
+            var currentPage = 0;
+            for (var i = 0; i < images.length; i++) {
+                var image = images[i];
+                var caption = (i + 1) + " / " + images.length;
+                items.push({
+                    "image": $(image).attr('src'),
+                    "caption": caption
+                });
 
-        $('.yoga-photo-browse').on('click', function(){
-            var pb = $.photoBrowser({
-                items: [
-                  {
-                    image: "res/jquery-weui/demos/images/avatar.jpg",
-                    caption: "1 / 4"
-                  },
-                  {
-                    image: "res/jquery-weui/demos/images/avatar2.jpg",
-                    caption: "2 / 4"
-                  },
-                  {
-                    image: "res/jquery-weui/demos/images/avatar3.jpg",
-                    caption: "3 / 4"
-                  },
-                  {
-                    image: "res/jquery-weui/demos/images/avatar4.png",
-                    caption: "4 / 4"
-                  }
-                ],
-                initIndex: 0
-            });
-
-            pb.open();
+                if (image == this) {
+                    currentPage = i;
+                }
+            }
+            $.photoBrowser({
+                items,
+                initIndex: currentPage
+            }).open();
         });
     });
 </script>
@@ -49,7 +40,7 @@
 
 <div class="page__bd div-gap-10px">
     <div class="weui-panel weui-panel_access">
-        <div class="weui-panel__hd yoga-photo-browse">
+        <div class="weui-panel__hd">
             <div class="left auto-clip" style="width:90%">
                 标题一ggggggggggggggggggggggggggggggggggggggggggggggg
             </div>
@@ -63,20 +54,16 @@
             <div class="weui-panel__bd">
                 <div class="weui-grids">
                     <a class="weui-grid js_grid" data-target="mobileView/venue.html" style="padding:10px;">
-                            <img class="yoga-photo-show" src="res/jquery-weui/demos/images/avatar.jpg" alt=""
-                                 style="width:100%;height:100%">
+                        <img class="yoga-photo-browse" src="res/jquery-weui/demos/images/avatar.jpg" alt="" style="width:100%;height:100%">
                     </a>
                     <a class="weui-grid js_grid" data-target="mobileView/venue.html" style="padding:10px;">
-                            <img class="yoga-photo-show" src="res/jquery-weui/demos/images/avatar2.jpg" alt=""
-                                 style="width:100%;height:100%">
+                        <img class="yoga-photo-browse" src="res/jquery-weui/demos/images/avatar2.jpg" alt="" style="width:100%;height:100%">
                     </a>
                     <a class="weui-grid js_grid" data-target="mobileView/venue.html" style="padding:10px;">
-                            <img class="yoga-photo-show" src="res/jquery-weui/demos/images/avatar3.jpg" alt=""
-                                 style="width:100%;height:100%">
+                        <img class="yoga-photo-browse" src="res/jquery-weui/demos/images/avatar3.jpg" alt="" style="width:100%;height:100%">
                     </a>
                     <a class="weui-grid js_grid" data-target="mobileView/venue.html" style="padding:10px;">
-                            <img class="yoga-photo-show" src="res/jquery-weui/demos/images/avatar4.png" alt=""
-                                 style="width:100%;height:100%">
+                        <img class="yoga-photo-browse" src="res/jquery-weui/demos/images/avatar4.png" alt="" style="width:100%;height:100%">
                     </a>
                 </div>
             </div>
@@ -86,7 +73,7 @@
 
 <div class="page__bd div-gap-10px">
     <div class="weui-panel weui-panel_access">
-        <div class="weui-panel__hd yoga-photo-browse">
+        <div class="weui-panel__hd">
             <div class="left auto-clip" style="width:90%">
                 标题一ggggggggggggggggggggggggggggggggggggggggggggggg
             </div>
@@ -100,20 +87,16 @@
             <div class="weui-panel__bd">
                 <div class="weui-grids">
                     <a class="weui-grid js_grid" data-target="mobileView/venue.html" style="padding:10px;">
-                            <img class="yoga-photo-show" src="res/jquery-weui/demos/images/icon_nav_button.png" alt=""
-                                 style="width:100%;height:100%">
+                        <img class="yoga-photo-browse" src="res/jquery-weui/demos/images/icon_nav_button.png" alt="" style="width:100%;height:100%">
                     </a>
                     <a class="weui-grid js_grid" data-target="mobileView/venue.html" style="padding:10px;">
-                            <img class="yoga-photo-show" src="res/jquery-weui/demos/images/icon_nav_button.png" alt=""
-                                 style="width:100%;height:100%">
+                        <img class="yoga-photo-browse" src="res/jquery-weui/demos/images/icon_nav_button.png" alt="" style="width:100%;height:100%">
                     </a>
                     <a class="weui-grid js_grid" data-target="mobileView/venue.html" style="padding:10px;">
-                            <img class="yoga-photo-show" src="res/jquery-weui/demos/images/icon_nav_button.png" alt=""
-                                 style="width:100%;height:100%">
+                        <img class="yoga-photo-browse" src="res/jquery-weui/demos/images/icon_nav_button.png" alt="" style="width:100%;height:100%">
                     </a>
                     <a class="weui-grid js_grid" data-target="mobileView/venue.html" style="padding:10px;">
-                            <img class="yoga-photo-show" src="res/jquery-weui/demos/images/icon_nav_button.png" alt=""
-                                 style="width:100%;height:100%">
+                        <img class="yoga-photo-browse" src="res/jquery-weui/demos/images/icon_nav_button.png" alt="" style="width:100%;height:100%">
                     </a>
                 </div>
             </div>

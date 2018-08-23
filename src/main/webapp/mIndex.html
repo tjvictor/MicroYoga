@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport"
-          content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"
+    />
     <link rel="stylesheet" href="res/jquery-weui/lib/weui.css">
     <link rel="stylesheet" href="res/jquery-weui/css/jquery-weui.css">
     <link rel="stylesheet" href="res/css/mobile.css">
@@ -14,58 +15,60 @@
     <script src="res/jquery-weui/js/swiper.js"></script>
     <script>
         $(function () {
-            $('.weui-tabbar__item').on("click", function(){
+            $('.weui-tabbar__item').on("click", function () {
                 $('.weui-tab__bd-item--content').load($(this).data("target"));
             });
         });
     </script>
 </head>
+
 <body>
 
-<div class="weui-tab">
-    <div class="weui-tab__bd">
-        <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
-            <div class="weui-tab__bd-item--content">
-                <h1>页面一</h1>
+    <div class="weui-tab">
+        <div class="weui-tab__bd">
+            <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+                <div class="weui-tab__bd-item--content">
+                    <h1>页面一</h1>
+                </div>
+
+                <div style="margin-bottom:55px;"></div>
             </div>
 
-            <div style="margin-bottom:55px;"></div>
+
         </div>
 
+        <!-- Full Popup Container-->
+        <div id="full-popup-container" class='weui-popup__container'>
+            <div class="weui-popup__overlay"></div>
+            <div class="weui-popup__modal">
+                <div class="weui-popup-container-text"></div>
 
-    </div>
+                <a href="javascript:;" class="weui-btn weui-btn_primary close-popup weui-footer_fixed-bottom">关闭</a>
+            </div>
+        </div>
 
-    <!-- Full Popup Container-->
-    <div id="full-popup-container" class='weui-popup__container'>
-        <div class="weui-popup__overlay"></div>
-        <div class="weui-popup__modal">
-            <div class="weui-popup-container-text"></div>
-
-            <a href="javascript:;" class="weui-btn weui-btn_primary close-popup weui-footer_fixed-bottom">关闭</a>
+        <div class="weui-tabbar" style="height:50px;bottom:0px;position:fixed">
+            <a href="#tab1" class="weui-tabbar__item weui-bar__item--on" data-target="mobileView/home.html">
+                <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 3em;">8</span>-->
+                <div class="weui-tabbar__icon">
+                    <img src="res/jquery-weui/demos/images/icon_nav_button.png" alt="">
+                </div>
+                <p class="weui-tabbar__label">首页</p>
+            </a>
+            <a href="#tab1" class="weui-tabbar__item" data-target="mobileView/order.html">
+                <div class="weui-tabbar__icon">
+                    <img src="res/jquery-weui/demos/images/icon_nav_msg.png" alt="">
+                </div>
+                <p class="weui-tabbar__label">约课</p>
+            </a>
+            <a href="#tab1" class="weui-tabbar__item" data-target="mobileView/personal.html">
+                <div class="weui-tabbar__icon">
+                    <img src="res/jquery-weui/demos/images/icon_nav_article.png" alt="">
+                </div>
+                <p class="weui-tabbar__label">个人中心</p>
+            </a>
         </div>
     </div>
-
-    <div class="weui-tabbar" style="height:50px;bottom:0px;position:fixed">
-        <a href="#tab1" class="weui-tabbar__item weui-bar__item--on" data-target="mobileView/home.html">
-            <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 3em;">8</span>-->
-            <div class="weui-tabbar__icon">
-                <img src="res/jquery-weui/demos/images/icon_nav_button.png" alt="">
-            </div>
-            <p class="weui-tabbar__label">首页</p>
-        </a>
-        <a href="#tab1" class="weui-tabbar__item" data-target="mobileView/order.html">
-            <div class="weui-tabbar__icon">
-                <img src="res/jquery-weui/demos/images/icon_nav_msg.png" alt="">
-            </div>
-            <p class="weui-tabbar__label">约课</p>
-        </a>
-        <a href="#tab1" class="weui-tabbar__item" data-target="mobileView/personal.html">
-            <div class="weui-tabbar__icon">
-                <img src="res/jquery-weui/demos/images/icon_nav_article.png" alt="">
-            </div>
-            <p class="weui-tabbar__label">个人中心</p>
-        </a>
-    </div>
-</div>
 </body>
+
 </html>
