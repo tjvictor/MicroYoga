@@ -1,0 +1,21 @@
+.myPagination {
+	width:100%;
+	background-color:white;
+	height:2rem;
+	line-height:2rem;
+	text-align:center;
+	margin:0.5rem 0;
+}
+
+.myPagination_nextPage ul {
+     display: inline-block;
+}
+
+.myPagination_nextPage ul li{
+    display: inline-block;
+    vertical-align: middle;
+    margin-left:0.1rem;
+    background-image:url(combo_arrow.png);
+    width:16px;
+    height:16px;
+}

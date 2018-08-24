@@ -2119,6 +2119,7 @@ button.swiper-pagination-bullet {
 }
 .weui-photo-browser-modal.weui-photo-browser-modal-visible {
   opacity: 1;
+  z-index: 9999;
 }
 .weui-photo-browser-modal .swiper-container {
   height: 100%;

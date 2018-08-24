@@ -7,9 +7,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface PhotoDao {
-    List<PhotoWall> getAllPhotoWalls(int pageNumber, int pageSize) throws SQLException;
+    List<PhotoWall> getAllPhotoWallEntities() throws SQLException;
 
-    List<Photo> getPhotoByPhotoWallBy(String photoWallId) throws SQLException;
+    List<PhotoWall> getAllPhotoWallWithPhotos(int pageNumber, int pageSize) throws SQLException;
+
+    List<Photo> getPhotoByPhotoWallId(String photoWallId) throws SQLException;
+
+    int getPhotoWallTotalCount() throws SQLException;
 
     void addPhoto(Photo item) throws SQLException;
 

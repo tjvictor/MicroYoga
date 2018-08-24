@@ -9,7 +9,7 @@ public class MainConsole {
     public static void main(String[] args) {
 
         try {
-            File fileOne = new File("C:/git/MicroYoga/src/main/webapp/res/img/temp/2.jpg");
+            File fileOne = new File("C:\\temp\\yoga\\photos\\e1f1bdce-b66c-4eb4-9877-4f26f1c10000\\20180824142113-Chrysanthemum.jpg");
             BufferedImage imageFirst = ImageIO.read(fileOne);
             int width = imageFirst.getWidth();
             int height = imageFirst.getHeight();
@@ -17,8 +17,8 @@ public class MainConsole {
             if(width <= 90)
                 return;
 
-            imageFirst = resize(imageFirst, 90, 90);
-            File outFile = new File("c:/temp/2.jpg");
+            imageFirst = zoomInImage(imageFirst, 90, 90);
+            File outFile = new File("c:/temp/4.jpg");
             ImageIO.write(imageFirst, "jpg", outFile);
         }catch(Exception e){
 

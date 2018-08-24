@@ -23,7 +23,7 @@ public class PhotoUtils {
 
         BufferedImage newImage = new BufferedImage(targetW, targetH, originalImage.getType());
         Graphics g = newImage.getGraphics();
-        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.drawImage(originalImage, 0, 0, targetW, targetH, null);
         g.dispose();
 
 
