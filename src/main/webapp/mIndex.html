@@ -3,23 +3,28 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>遇见瑜伽生活馆</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <link rel="stylesheet" href="res/jquery-weui/lib/weui.css">
     <link rel="stylesheet" href="res/jquery-weui/css/jquery-weui.css">
     <link rel="stylesheet" href="res/js/mobile/MyPlugins/pagination/jquery.myPagination.css">
     <link rel="stylesheet" href="res/css/mobile.css">
+    <link rel="stylesheet" href="res/videojs710/video-js.css">
     <script src="res/jquery-weui/lib/jquery-2.1.4.js"></script>
     <script src="res/jquery-weui/js/jquery-weui.js"></script>
     <script src="res/jquery-weui/js/swiper.js"></script>
     <script src="res/js/mobile/mobile.js"></script>
     <script src="res/js/mobile/MyPlugins/pagination/jquery.myPagination.js"></script>
+    <script src="res/videojs710/video.js"></script>
+
     <script>
         $(function () {
             $('.weui-tabbar__item').on("click", function () {
                 $('.weui-tab__bd-item--content').load($(this).data("target"));
             });
+
+            $('.weui-tab__bd-item--content').load('mobileView/home.html');
         });
     </script>
 </head>
@@ -30,7 +35,7 @@
         <div class="weui-tab__bd">
             <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
                 <div class="weui-tab__bd-item--content">
-                    <h1>页面一</h1>
+                    <h1></h1>
                 </div>
 
                 <div style="margin-bottom:55px;"></div>

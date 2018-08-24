@@ -40,6 +40,10 @@ body{
     white-space:nowrap;
 }
 
+.picture-radius-30px{
+    border-radius:30px;
+}
+
 .yoga-home-title{
     width:100%;
     background-color:#FD7F00;

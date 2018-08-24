@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="res/jquery-weui/lib/jquery-2.1.4.js"></script>
+    <script src="res/js/ajaxfileupload.js"></script>
+    <script>
+        function fileUploading(fileElementId) {
+            $.ajaxFileUpload({
+                url: '/websiteService/uploadPhotoWall/' + fileElementId + '/' + $('#photoWallId').val(),
+                secureuri: false,
+                dataType: 'json',
+                fileElementId: fileElementId,
+                success: function(data, status) {
+                    alert('good');
+                },
+                error: function(data, status, e) {
+                    alert(e);
+                },
+                complete: function(data) {
+                    $('#' + fileElementId).val('');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <input id="i_fileUploader" name="i_fileUploader" type="file" onchange="fileUploading('i_fileUploader');">
+    <input id="photoWallId" type="text" style="width:300px">
+</body>
+</html>

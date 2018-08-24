@@ -122,6 +122,7 @@ public class webServices {
         String randomFileName = savePath + randomString;
         String randomThumbFileName = savePath + randomThumbString;
         String randomFileUrl = saveUrl + randomString;
+        String randomThumbFileUrl = saveUrl + randomThumbString;
         File targetFile = new File(randomFileName);
         try (OutputStream f = new FileOutputStream(targetFile)) {
             f.write(sourceFile.getBytes());
@@ -137,8 +138,8 @@ public class webServices {
         photo.setId(UUID.randomUUID().toString());
         photo.setName(originalFileName);
         photo.setPhotoWallId(photoWallId);
-        photo.setUrl(randomFileName);
-        photo.setThumbUrl(randomThumbFileName);
+        photo.setUrl(randomFileUrl);
+        photo.setThumbUrl(randomThumbFileUrl);
         photo.setDate(dateTime);
         photoDaoImp.addPhoto(photo);
 
