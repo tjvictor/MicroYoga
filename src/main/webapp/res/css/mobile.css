@@ -44,12 +44,24 @@ body{
     border-radius:30px;
 }
 
+.text-font-size-14px{
+    font-size: 14px;
+}
+
+.text-align-right{
+    text-align: right;
+}
+
 .yoga-home-title{
     width:100%;
     background-color:#FD7F00;
     height: 2rem;
     line-height:2rem;
     text-align:center;
+}
+
+.yoga-popup-container-text{
+    min-height: 600px;
 }
 
 .swiper-container {

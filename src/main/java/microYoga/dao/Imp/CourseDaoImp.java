@@ -1,7 +1,7 @@
 package microYoga.dao.Imp;
 
-import microYoga.dao.TeacherDao;
-import microYoga.model.Teacher;
+import microYoga.dao.CourseDao;
+import microYoga.model.Course;
 
 import org.springframework.stereotype.Component;
 import java.sql.Connection;
@@ -14,24 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TeacherDaoImp extends BaseDao implements TeacherDao {
+public class CourseDaoImp extends BaseDao implements CourseDao {
 
     @Override
-    public List<Teacher> getTeachers() throws SQLException {
-        List<Teacher> items = new ArrayList<Teacher>();
-        String selectSql = String.format("select * from Teacher");
+    public List<Course> getCourses() throws SQLException {
+        List<Course> items = new ArrayList<Course>();
+        String selectSql = String.format("select * from Course");
 
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
                     while (rs.next()) {
                         int i = 1;
-                        Teacher item = new Teacher();
+                        Course item = new Course();
                         item.setId(rs.getString(i++));
                         item.setName(rs.getString(i++));
                         item.setAvatar(rs.getString(i++));
-                        item.setBrief(rs.getString(i++));
                         item.setIntroduction(rs.getString(i++));
+                        item.setRating(rs.getInt(i++));
                         items.add(item);
                     }
                 }
@@ -42,11 +42,10 @@ public class TeacherDaoImp extends BaseDao implements TeacherDao {
     }
 
     @Override
-    public Teacher getTeacherById(String id) throws SQLException {
-        String selectSql = String.format("select * from Teacher where Id = '%s'", id);
-
-        Teacher item = new Teacher();
-
+    public Course getCourseById(String id) throws SQLException {
+        List<Course> items = new ArrayList<Course>();
+        String selectSql = String.format("select * from Course where id = '%s'", id);
+        Course item = new Course();
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
@@ -55,8 +54,8 @@ public class TeacherDaoImp extends BaseDao implements TeacherDao {
                         item.setId(rs.getString(i++));
                         item.setName(rs.getString(i++));
                         item.setAvatar(rs.getString(i++));
-                        item.setBrief(rs.getString(i++));
                         item.setIntroduction(rs.getString(i++));
+                        item.setRating(rs.getInt(i++));
                     }
                 }
             }
@@ -66,40 +65,42 @@ public class TeacherDaoImp extends BaseDao implements TeacherDao {
     }
 
     @Override
-    public void insertTeacher(Teacher teacher) throws SQLException {
+    public void insertCourse(Course course) throws SQLException {
         try (Connection connection = DriverManager.getConnection(dbConnectString)){
-            String insertSql = "insert into Teacher values(?,?,?,?,?)";
+            String insertSql = "insert into Course values(?,?,?,?,?)";
             try(PreparedStatement ps = connection.prepareStatement(insertSql)) {
                 int i = 1;
-                ps.setString(i++, teacher.getId());
-                ps.setString(i++, teacher.getName());
-                ps.setString(i++, teacher.getAvatar());
-                ps.setString(i++, teacher.getBrief());
-                ps.setString(i++, teacher.getIntroduction());
+                ps.setString(i++, course.getId());
+                ps.setString(i++, course.getName());
+                ps.setString(i++, course.getAvatar());
+                ps.setString(i++, course.getIntroduction());
+                ps.setInt(i++, course.getRating());
                 ps.executeUpdate();
             }
         }
+        course.setIntroduction(course.getIntroduction());
     }
 
     @Override
-    public void updateTeacher(Teacher teacher) throws SQLException {
+    public void updateCourse(Course course) throws SQLException {
         try (Connection connection = DriverManager.getConnection(dbConnectString)){
-            String insertSql = "update Teacher set Name=?, Avatar=?, Brief = ?, Introduction=? where id = ?";
+            String insertSql = "update Course set Name=?, Avatar=?, Introduction=?, Rating=? where id = ?";
             try(PreparedStatement ps = connection.prepareStatement(insertSql)) {
                 int i = 1;
-                ps.setString(i++, teacher.getName());
-                ps.setString(i++, teacher.getAvatar());
-                ps.setString(i++, teacher.getBrief());
-                ps.setString(i++, teacher.getIntroduction());
-                ps.setString(i++, teacher.getId());
+                ps.setString(i++, course.getName());
+                ps.setString(i++, course.getAvatar());
+                ps.setString(i++, course.getIntroduction());
+                ps.setInt(i++, course.getRating());
+                ps.setString(i++, course.getId());
                 ps.executeUpdate();
             }
         }
+        course.setIntroduction(course.getIntroduction());
     }
 
     @Override
-    public void deleteTeacher(String id) throws SQLException {
-        String deleteSql = String.format("update Teacher set IsDel=1 where id = '%s'", id);
+    public void deleteCourse(String id) throws SQLException {
+        String deleteSql = String.format("delete from Course where id = '%s'", id);
         delete(deleteSql);
     }
 }

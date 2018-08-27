@@ -1,10 +1,12 @@
 package microYoga.rest;
 
 import microYoga.dao.PhotoDao;
+import microYoga.dao.TeacherDao;
 import microYoga.model.FileUploadEntity;
 import microYoga.model.Photo;
 import microYoga.model.PhotoWall;
 import microYoga.model.ResponseObject;
+import microYoga.model.Teacher;
 import microYoga.utils.CommonUtils;
 import microYoga.utils.PhotoUtils;
 
@@ -49,6 +51,9 @@ public class webServices {
 
     @Autowired
     private PhotoDao photoDaoImp;
+
+    @Autowired
+    private TeacherDao teacherDaoImp;
 
     //region file upload
     @PostMapping("/fileUpload/{requestFileName}/{requestFileType}")
@@ -259,6 +264,19 @@ public class webServices {
         try {
             photoDaoImp.deletePhoto(id);
             return new ResponseObject("ok", "删除成功", id);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region teacher
+    @RequestMapping(value = "/getTeachers", method = RequestMethod.GET)
+    public ResponseObject getTeachers(){
+        try {
+            List<Teacher> items = teacherDaoImp.getTeachers();
+            return new ResponseObject("ok", "查询成功", items);
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             return new ResponseObject("error", "系统错误，请联系系统管理员");

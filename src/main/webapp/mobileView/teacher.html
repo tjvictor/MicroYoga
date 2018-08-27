@@ -1,7 +1,13 @@
 <script>
     $(function() {
-        $('.yoga-open-popup').on('click', function() {
-            $('#full-popup-container .weui-popup-container-text').html('内容自定义，这里省略！！！');
+        $(function () {
+            getTeachers();
+        });
+
+        $(document).on('click', '.yoga-open-popup', function() {
+            console.log($(this).data('id'));
+            console.log($('#weui-panel__bd').data($(this).data('id')));
+            $('#full-popup-container .yoga-popup-container-text').html($('.weui-panel__bd').data($(this).data('id')));
             $('#full-popup-container').popup();
         });
     });
