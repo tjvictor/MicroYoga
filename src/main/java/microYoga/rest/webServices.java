@@ -1,12 +1,19 @@
 package microYoga.rest;
 
+import microYoga.dao.CourseDao;
+import microYoga.dao.OrderDao;
 import microYoga.dao.PhotoDao;
+import microYoga.dao.ScheduleDao;
 import microYoga.dao.TeacherDao;
+import microYoga.dao.VideoDao;
+import microYoga.model.Course;
 import microYoga.model.FileUploadEntity;
 import microYoga.model.Photo;
 import microYoga.model.PhotoWall;
 import microYoga.model.ResponseObject;
+import microYoga.model.ScheduleWeek;
 import microYoga.model.Teacher;
+import microYoga.model.Video;
 import microYoga.utils.CommonUtils;
 import microYoga.utils.PhotoUtils;
 
@@ -20,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -32,6 +40,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -54,6 +63,18 @@ public class webServices {
 
     @Autowired
     private TeacherDao teacherDaoImp;
+
+    @Autowired
+    private CourseDao courseDaoImp;
+
+    @Autowired
+    private VideoDao videoDaoImp;
+
+    @Autowired
+    private OrderDao orderDaoImp;
+
+    @Autowired
+    private ScheduleDao scheduleDaoImp;
 
     //region file upload
     @PostMapping("/fileUpload/{requestFileName}/{requestFileType}")
@@ -181,7 +202,7 @@ public class webServices {
     }
 
     @RequestMapping(value = "/getAllPhotoWallWithPhotos", method = RequestMethod.GET)
-    public ResponseObject getAllPhotoWallWithPhotos(@FormParam("pageNumber") int pageNumber, @FormParam("pageSize") int pageSize){
+    public ResponseObject getAllPhotoWallWithPhotos(@RequestParam("pageNumber") int pageNumber, @RequestParam("pageSize") int pageSize){
         try {
             List<PhotoWall> items = photoDaoImp.getAllPhotoWallWithPhotos(pageNumber, pageSize);
             return new ResponseObject("ok", "查询成功", items);
@@ -247,7 +268,7 @@ public class webServices {
     }
 
     @RequestMapping(value = "/deletePhotoWall", method = RequestMethod.GET)
-    public ResponseObject deletePhotoWall(@FormParam("id") String id) {
+    public ResponseObject deletePhotoWall(@RequestParam("id") String id) {
 
         try {
             photoDaoImp.deletePhotoWall(id);
@@ -259,7 +280,7 @@ public class webServices {
     }
 
     @RequestMapping(value = "/deletePhoto", method = RequestMethod.GET)
-    public ResponseObject deletePhoto(@FormParam("id") String id) {
+    public ResponseObject deletePhoto(@RequestParam("id") String id) {
 
         try {
             photoDaoImp.deletePhoto(id);
@@ -277,6 +298,59 @@ public class webServices {
         try {
             List<Teacher> items = teacherDaoImp.getTeachers();
             return new ResponseObject("ok", "查询成功", items);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region course
+    @RequestMapping(value = "/getCourses", method = RequestMethod.GET)
+    public ResponseObject getCourses(){
+        try {
+            List<Course> items = courseDaoImp.getCourses();
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region video
+    @RequestMapping(value = "/getVideos", method = RequestMethod.GET)
+    public ResponseObject getVideos(){
+        try {
+            List<Video> items = videoDaoImp.getVideos();
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region Orders
+    @RequestMapping(value = "/getOneWeekScheduledCourses", method = RequestMethod.GET)
+    public ResponseObject getOneWeekScheduledCourses(@RequestParam("memberId") String memberId ){
+        try {
+            List<ScheduleWeek> items = new ArrayList<ScheduleWeek>();
+            Date today = new Date();
+            for(int day = 0; day < 7; day++){
+                ScheduleWeek item = new ScheduleWeek();
+                Date current = CommonUtils.dateAddDay(today, day);
+                item.setWeekName(CommonUtils.getWeekName(current));
+                item.setShortDate(CommonUtils.getMonthDay(current));
+
+                item.setScheduleExts(scheduleDaoImp.getOneDayScheduledCourses(CommonUtils.getDateStr(current), memberId));
+
+                items.add(item);
+            }
+
+
+
+            return new ResponseObject("ok", "查询成功", null);
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             return new ResponseObject("error", "系统错误，请联系系统管理员");

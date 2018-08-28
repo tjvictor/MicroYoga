@@ -1,11 +1,21 @@
 <script>
     $(function() {
-        $('.yoga-open-popup').on('click', function() {
-            $('#full-popup-container .yoga-popup-container-text').html('内容自定义，这里省略！！！');
+        $(function () {
+            getCourses();
+        });
+
+        $('document').off('click', '.yoga-open-popup').on('click', '.yoga-open-popup', function() {
+            $('#full-popup-container .yoga-popup-container-text').html($('.weui-panel__bd').data($(this).data('id')));
             $('#full-popup-container').popup();
         });
-});
+
+        $('.yoga-nav-go-back').on('click', function (){ $('.weui-tab__bd-item--content').load('mobileView/home.html'); });
+    });
 </script>
+
+<div class="yoga-nav-go-back">
+    <img src="res/img/arrow_left_24px.png" >
+</div>
 
 <div class="page__bd">
     <div class="weui-panel weui-panel_access">
@@ -17,7 +27,13 @@
                 </div>
                 <div class="weui-media-box__bd">
                     <h4 class="weui-media-box__title">亲子瑜伽</h4>
-                    <p class="weui-media-box__desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</p>
+                    <p class="weui-media-box__desc">
+                        <span class="text-font-size-14px" style="margin-right:5px;">难度</span>
+                        <img src="res/img/star_16.png">
+                        <img src="res/img/star_16.png">
+                        <img src="res/img/star_16.png">
+                        <img src="res/img/star_16.png">
+                        <img src="res/img/star_16.png"></p>
                 </div>
             </a>
             <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg yoga-open-popup">

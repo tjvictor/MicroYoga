@@ -32,3 +32,7 @@ function callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoad
         }
     });
 }
+
+function jumpToPage(contentClass, url){
+    $(contentClass).load(url);
+}

@@ -1,31 +1,37 @@
 <script>
     $(function() {
-        $('.weui-gallery').on('click',
-        function() {
+    //    $('.weui-gallery').on('click',
+    //    function() {
+    //        var myPlayer = videojs('my-video');
+    //        myPlayer.pause();
+    //        $(this).css('display', 'none');
+    //    });
+        getVideos();
+
+        $(document).off('click', '.yoga-open-video').on('click', '.yoga-open-video', function() {
             var myPlayer = videojs('my-video');
-            myPlayer.pause();
-            $(this).css('display', 'none');
+            var videoType = $(this).data('video-type');
+            myPlayer.src($(this).data('video-path'));
+            myPlayer.ready(function() {
+                myPlayer.play();
+            });
         });
+
+        $('.yoga-nav-go-back').on('click', function (){ $('.weui-tab__bd-item--content').load('mobileView/home.html'); });
     });
 
-    function showVideo(item) {
-        var myPlayer = videojs('my-video');
-        myPlayer.src($(item).data('video'));
-        myPlayer.ready(function() {
-            myPlayer.play();
-        });
 
-        $('#my-video').attr('src', '/yoga/video/movie.ogg');
-        $('.weui-gallery').css('display', 'block');
-    }
 </script>
 
-<div class="weui-gallery">
+<!--<div class="weui-gallery">
     <span class="weui-gallery__img">
         <video id="my-video" style="width:100%" class="video-js vjs-default-skin" controls preload="auto" data-setup="{}"></video>
     </span>
+</div>-->
+<div class="yoga-nav-go-back">
+    <img src="res/img/arrow_left_24px.png" >
 </div>
-
+<video id="my-video" style="width:100%" class="video-js vjs-default-skin" controls preload="auto" data-setup="{}"></video>
 <div class="page__bd">
     <div class="weui-panel weui-panel_access">
         <div class="weui-panel__hd">教学视频</div>
@@ -37,33 +43,6 @@
                 <div class="weui-media-box__bd">
                     <h4 class="weui-media-box__title">李卉教你学瑜伽 第一课</h4>
                     <p class="weui-media-box__desc">第一节课我们来一起学习.......</p>
-                </div>
-            </a>
-            <a href="javascript:void(0);" onclick="showVideo(this)" data-video="yoga/video/1.mp4" class="weui-media-box weui-media-box_appmsg yoga-open-popup">
-                <div class="weui-media-box__hd">
-                    <img class="weui-media-box__thumb picture-radius-30px" src="yoga/video/2.png" alt="">
-                </div>
-                <div class="weui-media-box__bd">
-                    <h4 class="weui-media-box__title">李卉教你学瑜伽 第二课</h4>
-                    <p class="weui-media-box__desc">第二节课我们来一起学习.......</p>
-                </div>
-            </a>
-            <a href="javascript:void(0);" onclick="showVideo(this)" data-video="yoga/video/1.mp4" class="weui-media-box weui-media-box_appmsg yoga-open-popup">
-                <div class="weui-media-box__hd">
-                    <img class="weui-media-box__thumb picture-radius-30px" src="yoga/video/3.png" alt="">
-                </div>
-                <div class="weui-media-box__bd">
-                    <h4 class="weui-media-box__title">李卉教你学瑜伽 第三课</h4>
-                    <p class="weui-media-box__desc">第三节课我们来一起学习.......</p>
-                </div>
-            </a>
-            <a href="javascript:void(0);" onclick="showVideo(this)" data-video="yoga/video/1.mp4" class="weui-media-box weui-media-box_appmsg yoga-open-popup">
-                <div class="weui-media-box__hd">
-                    <img class="weui-media-box__thumb picture-radius-30px" src="yoga/video/4.png" alt="">
-                </div>
-                <div class="weui-media-box__bd">
-                    <h4 class="weui-media-box__title">李卉教你学瑜伽 第四课</h4>
-                    <p class="weui-media-box__desc">第四节课我们来一起学习.......</p>
                 </div>
             </a>
         </div>

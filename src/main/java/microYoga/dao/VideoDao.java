@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface VideoDao {
 
-    List<Video> getAllVideos() throws SQLException;
+    List<Video> getVideos() throws SQLException;
 }

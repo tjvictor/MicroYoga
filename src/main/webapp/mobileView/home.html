@@ -5,7 +5,7 @@
             autoplay: 3000
         });
 
-        $('.yoga-open-popup').on('click', function() {
+        $(document).off('click', '.yoga-open-popup').on('click', '.yoga-open-popup', function() {
             $('#full-popup-container .yoga-popup-container-text').html('内容可以自定义，这里省略!!!');
             $('#full-popup-container').popup();
         });

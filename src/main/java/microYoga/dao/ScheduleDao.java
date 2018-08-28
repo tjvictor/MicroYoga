@@ -1,6 +1,7 @@
 package microYoga.dao;
 
 import microYoga.model.Schedule;
+import microYoga.model.ScheduleExt;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -20,4 +21,6 @@ public interface ScheduleDao {
     void physicalDeleteSchedule(String id) throws SQLException;
 
     Schedule getScheduleById(String scheduleId) throws SQLException;
+
+    List<ScheduleExt> getOneDayScheduledCourses(String dateStr, String memberId) throws SQLException;
 }

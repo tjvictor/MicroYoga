@@ -17,6 +17,8 @@
     <script src="res/js/mobile/mobile.js"></script>
     <script src="res/js/mobile/photo.js"></script>
     <script src="res/js/mobile/teacher.js"></script>
+    <script src="res/js/mobile/course.js"></script>
+    <script src="res/js/mobile/video.js"></script>
     <script src="res/js/mobile/MyPlugins/pagination/jquery.myPagination.js"></script>
     <script src="res/videojs710/video.js"></script>
 
@@ -35,7 +37,7 @@
 
     <div class="weui-tab">
         <div class="weui-tab__bd">
-            <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+            <div id="tabbar" class="weui-tab__bd-item weui-tab__bd-item--active">
                 <div class="weui-tab__bd-item--content">
                     <h1></h1>
                 </div>
@@ -47,7 +49,7 @@
         </div>
 
         <!-- Full Popup Container-->
-        <div id="full-popup-container" class='weui-popup__container'>
+        <div id="full-popup-container" class='weui-popup__container' data-history="false">
             <div class="weui-popup__overlay"></div>
             <div class="weui-popup__modal">
                 <div class="yoga-popup-container-text"></div>
@@ -57,7 +59,7 @@
         </div>
 
         <div class="weui-tabbar" style="height:50px;bottom:0px;position:fixed">
-            <a href="#tab1" class="weui-tabbar__item weui-bar__item--on" data-target="mobileView/home.html">
+            <a href="#tabbar" class="weui-tabbar__item weui-bar__item--on" data-target="mobileView/home.html">
                 <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 3em;">8</span>-->
                 <div class="weui-tabbar__icon">
                     <img src="res/jquery-weui/demos/images/icon_nav_button.png" alt="">

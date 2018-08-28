@@ -4,14 +4,18 @@
             getTeachers();
         });
 
-        $(document).on('click', '.yoga-open-popup', function() {
-            console.log($(this).data('id'));
-            console.log($('#weui-panel__bd').data($(this).data('id')));
+        $(document).off('click', '.yoga-open-popup').on('click', '.yoga-open-popup', function() {
             $('#full-popup-container .yoga-popup-container-text').html($('.weui-panel__bd').data($(this).data('id')));
             $('#full-popup-container').popup();
         });
+
+        $('.yoga-nav-go-back').on('click', function (){ $('.weui-tab__bd-item--content').load('mobileView/home.html'); });
     });
 </script>
+
+<div class="yoga-nav-go-back">
+    <img src="res/img/arrow_left_24px.png" >
+</div>
 
 <div class="page__bd">
     <div class="weui-panel weui-panel_access">

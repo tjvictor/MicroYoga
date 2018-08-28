@@ -2,6 +2,7 @@ package microYoga.dao.Imp;
 
 import microYoga.dao.ScheduleDao;
 import microYoga.model.Schedule;
+import microYoga.model.ScheduleExt;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -175,4 +176,71 @@ public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
 
         return item;
     }
+
+    @Override
+    public List<ScheduleExt> getOneDayScheduledCourses(String dateStr, String memberId) throws SQLException {
+        List<ScheduleExt> items = new ArrayList<ScheduleExt>();
+        String selectSql = "select s.Id, s.TeacherId, s.CourseId, s.StartTime, s.EndTime, s.Capacity, c.Name, c.Avatar, c.Rating, t.Name from Schedule s ";
+        selectSql += " join Course c on s.CourseId = c.Id ";
+        selectSql += " join Teacher t on s.TeacherId = t.Id ";
+        selectSql += (" where substr(s.StartTime, 1, 10) = " + dateStr);
+
+        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try (ResultSet rs = stmt.executeQuery(selectSql)) {
+                    while (rs.next()) {
+                        ScheduleExt item = new ScheduleExt();
+                        int i = 1;
+                        item.setId(rs.getString(i++));
+                        item.setTeacherId(rs.getString(i++));
+                        item.setCourseId(rs.getString(i++));
+                        item.setStartDateTime(rs.getString(i++));
+                        item.setEndDateTime(rs.getString(i++));
+                        item.setCapacity(Integer.parseInt(rs.getString(i++)));
+                        item.setCourseName(rs.getString(i++));
+                        item.setCourseAvatar(rs.getString(i++));
+                        item.setCourseRating(Integer.parseInt(rs.getString(i++)));
+                        item.setTeacherName(rs.getString(i++));
+                        item.setOrderedCount(getOrderedMemberCountByScheduleId(item.getId()));
+                        item.setOrdered(isMemberOrderThisSchedule(item.getId(), memberId));
+
+                    }
+                }
+            }
+        }
+
+        return items;
+    }
+
+    private int getOrderedMemberCountByScheduleId(String scheduleId) throws SQLException {
+        String selectSql = String.format("select count(0) from Order where ScheduleId = '%s'", scheduleId);
+        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try (ResultSet rs = stmt.executeQuery(selectSql)) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private boolean isMemberOrderThisSchedule(String scheduleId, String memberId) throws SQLException {
+        String selectSql = String.format("select count(0) from Order where ScheduleId = '%s' and MemeberId = '%s'", scheduleId, memberId);
+        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try (ResultSet rs = stmt.executeQuery(selectSql)) {
+                    if (rs.next()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+
 }

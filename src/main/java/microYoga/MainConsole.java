@@ -1,25 +1,33 @@
 package microYoga;
 
-import javax.imageio.ImageIO;
+import microYoga.utils.CommonUtils;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainConsole {
     public static void main(String[] args) {
 
         try {
-            File fileOne = new File("C:\\temp\\yoga\\photos\\e1f1bdce-b66c-4eb4-9877-4f26f1c10000\\20180824142113-Chrysanthemum.jpg");
-            BufferedImage imageFirst = ImageIO.read(fileOne);
-            int width = imageFirst.getWidth();
-            int height = imageFirst.getHeight();
+            Date today=new Date();
+            for(int day = 0; day < 7; day++){
+                SimpleDateFormat dateFm = new SimpleDateFormat("EEE");
+                switch (dateFm.format(CommonUtils.dateAddDay(today, day)).toLowerCase()){
+                    case "mon": System.out.println("周一"); break;
+                    case "tue": System.out.println("周二"); break;
+                    case "wed": System.out.println("周三"); break;
+                    case "thu": System.out.println("周四"); break;
+                    case "fri": System.out.println("周五"); break;
+                    case "sat": System.out.println("周六"); break;
+                    case "sun": System.out.println("周日"); break;
+                    default: System.out.println(""); break;
+                }
+            }
 
-            if(width <= 90)
-                return;
 
-            imageFirst = zoomInImage(imageFirst, 90, 90);
-            File outFile = new File("c:/temp/4.jpg");
-            ImageIO.write(imageFirst, "jpg", outFile);
+
         }catch(Exception e){
 
         }

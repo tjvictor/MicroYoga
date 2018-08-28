@@ -9,7 +9,7 @@ import java.util.List;
 public interface OrderDao {
     List<Order> getOrdersByFilter(String startDate, String endDate) throws SQLException, ParseException;
 
-    List<Order> getOrderdMembers(String subScheduleId) throws SQLException;
+    List<Order> getOrderedMembers(String subScheduleId) throws SQLException;
 
     List<Order> getMobileOrdersByFilter(String date, String userId) throws SQLException, ParseException;
 

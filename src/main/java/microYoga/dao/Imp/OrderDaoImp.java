@@ -56,7 +56,7 @@ public class OrderDaoImp extends BaseDao implements OrderDao {
     }
 
     @Override
-    public List<Order> getOrderdMembers(String subScheduleId) throws SQLException {
+    public List<Order> getOrderedMembers(String subScheduleId) throws SQLException {
         List<Order> subSchedules = new ArrayList<Order>();
 
         String selectSql = String.format("select sub.Id, sub.MemberId, m.Name, m.Tel from Order " +
@@ -168,4 +168,5 @@ public class OrderDaoImp extends BaseDao implements OrderDao {
 
         return 0;
     }
+
 }
