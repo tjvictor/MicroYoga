@@ -183,7 +183,7 @@ public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
         String selectSql = "select s.Id, s.TeacherId, s.CourseId, s.StartTime, s.EndTime, s.Capacity, c.Name, c.Avatar, c.Rating, t.Name from Schedule s ";
         selectSql += " join Course c on s.CourseId = c.Id ";
         selectSql += " join Teacher t on s.TeacherId = t.Id ";
-        selectSql += (" where substr(s.StartTime, 1, 10) = " + dateStr);
+        selectSql += String.format(" where substr(s.StartTime, 1, 10) = '%s'", dateStr);
 
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
             try (Statement stmt = connection.createStatement()) {
@@ -202,8 +202,14 @@ public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
                         item.setCourseRating(Integer.parseInt(rs.getString(i++)));
                         item.setTeacherName(rs.getString(i++));
                         item.setOrderedCount(getOrderedMemberCountByScheduleId(item.getId()));
-                        item.setOrdered(isMemberOrderThisSchedule(item.getId(), memberId));
+                        String orderId = getOrderIdByScheduleIdAndMemberId(item.getId(), memberId);
+                        item.setOrderId(orderId);
+                        if(StringUtils.isEmpty(orderId))
+                            item.setOrdered(false);
+                        else
+                            item.setOrdered(true);
 
+                        items.add(item);
                     }
                 }
             }
@@ -213,7 +219,7 @@ public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
     }
 
     private int getOrderedMemberCountByScheduleId(String scheduleId) throws SQLException {
-        String selectSql = String.format("select count(0) from Order where ScheduleId = '%s'", scheduleId);
+        String selectSql = String.format("select count(0) from Orders where ScheduleId = '%s'", scheduleId);
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try (ResultSet rs = stmt.executeQuery(selectSql)) {
@@ -227,19 +233,19 @@ public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
         return 0;
     }
 
-    private boolean isMemberOrderThisSchedule(String scheduleId, String memberId) throws SQLException {
-        String selectSql = String.format("select count(0) from Order where ScheduleId = '%s' and MemeberId = '%s'", scheduleId, memberId);
+    private String getOrderIdByScheduleIdAndMemberId(String scheduleId, String memberId) throws SQLException {
+        String selectSql = String.format("select Id from Orders where ScheduleId = '%s' and MemberId = '%s'", scheduleId, memberId);
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try (ResultSet rs = stmt.executeQuery(selectSql)) {
                     if (rs.next()) {
-                        return true;
+                        return rs.getString(1);
                     }
                 }
             }
         }
 
-        return false;
+        return "";
     }
 
 

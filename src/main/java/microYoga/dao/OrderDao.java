@@ -13,11 +13,11 @@ public interface OrderDao {
 
     List<Order> getMobileOrdersByFilter(String date, String userId) throws SQLException, ParseException;
 
-    void insertOrder(Order subSchedule) throws SQLException;
+    void insertOrder(Order order) throws SQLException;
 
-    void updateOrder(Order subSchedule) throws SQLException;
+    void updateOrder(Order order) throws SQLException;
 
-    void deleteOrder(Order subSchedule) throws SQLException;
+    void deleteOrder(Order order) throws SQLException;
 
     void deleteOrder(String id) throws SQLException;
 

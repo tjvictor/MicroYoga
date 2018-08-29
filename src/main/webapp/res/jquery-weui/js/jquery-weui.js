@@ -3841,12 +3841,14 @@ if (typeof define === 'function' && define.amd) {
 
     if(!/^#/.test(href)) return ;
 
-    $a.parent().find("."+ITEM_ON).removeClass(ITEM_ON);
+    //$a.parent().find("."+ITEM_ON).removeClass(ITEM_ON);
+    $a.parent().children("."+ITEM_ON).removeClass(ITEM_ON);
+
     $a.addClass(ITEM_ON);
 
-    var bd = $a.parents(".weui-tab").find(".weui-tab__bd");
-
-    bd.find(".weui-tab__bd-item--active").removeClass("weui-tab__bd-item--active");
+    //var bd = $a.parents(".weui-tab").find(".weui-tab__bd");
+    //bd.find(".weui-tab__bd-item--active").removeClass("weui-tab__bd-item--active");
+    $a.parent().parent().children(".weui-tab__bd").children(".weui-tab__bd-item--active").removeClass("weui-tab__bd-item--active");
 
     $(href).addClass("weui-tab__bd-item--active");
   }

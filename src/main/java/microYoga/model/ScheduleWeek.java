@@ -27,16 +27,7 @@ public class ScheduleWeek {
     }
 
     public void setWeekName(String weekName) {
-        switch (weekName.toLowerCase()){
-            case "mon": this.weekName = "周一"; break;
-            case "tue": this.weekName = "周二"; break;
-            case "wed": this.weekName = "周三"; break;
-            case "thu": this.weekName = "周四"; break;
-            case "fri": this.weekName = "周五"; break;
-            case "sat": this.weekName = "周六"; break;
-            case "sun": this.weekName = "周日"; break;
-            default: this.weekName = ""; break;
-        }
+        this.weekName = weekName;
     }
 
     public List<ScheduleExt> getScheduleExts() {

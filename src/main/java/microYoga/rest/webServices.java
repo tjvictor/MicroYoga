@@ -8,6 +8,7 @@ import microYoga.dao.TeacherDao;
 import microYoga.dao.VideoDao;
 import microYoga.model.Course;
 import microYoga.model.FileUploadEntity;
+import microYoga.model.Order;
 import microYoga.model.Photo;
 import microYoga.model.PhotoWall;
 import microYoga.model.ResponseObject;
@@ -350,7 +351,35 @@ public class webServices {
 
 
 
-            return new ResponseObject("ok", "查询成功", null);
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/insertOrder", method = RequestMethod.GET)
+    public ResponseObject insertOrder(@RequestParam("scheduleId") String scheduleId, @RequestParam("memberId") String memberId){
+        try {
+            String id = UUID.randomUUID().toString();
+            Order item = new Order();
+            item.setId(id);
+            item.setScheduleId(scheduleId);
+            item.setMemberId(memberId);
+            item.setDateTime(CommonUtils.getCurrentDateTime());
+            orderDaoImp.insertOrder(item);
+            return new ResponseObject("ok", "新增成功", id);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/deleteOrder", method = RequestMethod.GET)
+    public ResponseObject deleteOrder(@RequestParam("orderId") String orderId){
+        try {
+            orderDaoImp.deleteOrder(orderId);
+            return new ResponseObject("ok", "删除成功", orderId);
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             return new ResponseObject("error", "系统错误，请联系系统管理员");
