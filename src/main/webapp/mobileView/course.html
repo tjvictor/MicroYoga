@@ -1,16 +1,14 @@
 <script>
-    $(function() {
-        $(function () {
-            getCourses();
-        });
-
-        $('document').off('click', '.yoga-open-popup').on('click', '.yoga-open-popup', function() {
-            $('#full-popup-container .yoga-popup-container-text').html($('.weui-panel__bd').data($(this).data('id')));
-            $('#full-popup-container').popup();
-        });
-
-        $('.yoga-nav-go-back').on('click', function (){ $('.weui-tab__bd-item--content').load('mobileView/home.html'); });
+    $(function () {
+        getCourses();
     });
+
+    $('document').off('click', '.yoga-open-popup').on('click', '.yoga-open-popup', function() {
+        $('#full-popup-container .yoga-popup-container-text').html($('.weui-panel__bd').data($(this).data('id')));
+        $('#full-popup-container').popup();
+    });
+
+    $('.yoga-nav-go-back').on('click', function (){ $('.weui-tab__bd-item--content').load('mobileView/home.html'); });
 </script>
 
 <div class="yoga-nav-go-back">

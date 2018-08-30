@@ -1,6 +1,6 @@
 function callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoading) {
     callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoading, true);
-}
+};
 
 function callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoading, async) {
     var aPost = iPost ? 'POST': 'GET';
@@ -33,6 +33,44 @@ function callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoad
     });
 }
 
-function jumpToPage(contentClass, url){
-    $(contentClass).load(url);
+$('.yoga-login-button').on('click', function(){
+    var name = $('.yoga-login-username').val();
+    var pwd = $('.yoga-login-password').val();
+    if($.trim(name) === ''){
+        $.alert("手机不能为空！", "警告！");
+    }
+    if($.trim(pwd) === ''){
+        $.alert("密码不能为空！", "警告！");
+    }
+    var param = "tel="+name+"&password="+pwd;
+
+    callAjax('/websiteService/login', '', 'loginCallback', '', '', param, '');
+});
+function loginCallback(data){
+    if (data.status == "ok" && data.callBackData){
+        Cookies.set("meet-yoga-user", data.callBackData, { expires: 1 });
+        $('#tabbar .weui-tab__bd-item--content').load('mobileView/home.html');
+        close_login();
+    }else{
+        $.alert("手机号码不存在或是密码不正确！请重新登录", "警告！");
+    }
+}
+function open_login(){
+    $('.yoga-login-username').val('');
+    $('.yoga-login-password').val('');
+    $('#loginBar').addClass('weui-tab__bd-item--active');
+    $('#tabbar').removeClass('weui-tab__bd-item--active');
+}
+function close_login(){
+    $('#tabbar').addClass('weui-tab__bd-item--active');
+    $('#loginBar').removeClass('weui-tab__bd-item--active');
+}
+
+    function checkUser(){
+    var user = Cookies.get('meet-yoga-user');
+    if(!user){
+        open_login();
+        return false;
+    }
+    return user;
 }

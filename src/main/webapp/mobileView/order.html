@@ -1,6 +1,9 @@
 <script>
     $(function (){
-        getOneWeekScheduledCourses();
+        var user = checkUser();
+        if(user){
+            getOneWeekScheduledCourses();
+        }
 
         $(document).off('click', '.order-button').on('click', '.order-button', function() {
             orderCourse($(this).data('schedule-id'));

@@ -1,6 +1,7 @@
 package microYoga.rest;
 
 import microYoga.dao.CourseDao;
+import microYoga.dao.MemberDao;
 import microYoga.dao.OrderDao;
 import microYoga.dao.PhotoDao;
 import microYoga.dao.ScheduleDao;
@@ -8,6 +9,7 @@ import microYoga.dao.TeacherDao;
 import microYoga.dao.VideoDao;
 import microYoga.model.Course;
 import microYoga.model.FileUploadEntity;
+import microYoga.model.Member;
 import microYoga.model.Order;
 import microYoga.model.Photo;
 import microYoga.model.PhotoWall;
@@ -76,6 +78,9 @@ public class webServices {
 
     @Autowired
     private ScheduleDao scheduleDaoImp;
+
+    @Autowired
+    private MemberDao memberDaoImp;
 
     //region file upload
     @PostMapping("/fileUpload/{requestFileName}/{requestFileType}")
@@ -387,4 +392,16 @@ public class webServices {
     }
     //endregion
 
+    //region Member
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ResponseObject login(@RequestParam("tel") String tel, @RequestParam("password") String password ){
+        try {
+            Member item = memberDaoImp.authenticateUser(tel,password);
+            return new ResponseObject("ok", "查询成功", item);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
 }

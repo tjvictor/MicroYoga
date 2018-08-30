@@ -14,7 +14,7 @@
     <script src="res/jquery-weui/lib/jquery-2.1.4.js"></script>
     <script src="res/jquery-weui/js/jquery-weui.js"></script>
     <script src="res/jquery-weui/js/swiper.js"></script>
-    <script src="res/js/jquery.cookie.js"></script>
+    <script src="res/js/js.cookie.js"></script>
     <script src="res/js/mobile/mobile.js"></script>
     <script src="res/js/mobile/photo.js"></script>
     <script src="res/js/mobile/teacher.js"></script>
@@ -26,10 +26,26 @@
     <script>
         $(function () {
             $('.weui-tabbar__item').on("click", function () {
-                $('.weui-tab__bd-item--content').load($(this).data("target"));
+                $('#tabbar .weui-tab__bd-item--content').load($(this).data("target"));
             });
 
-            $('.weui-tab__bd-item--content').load('mobileView/home.html');
+            $('#tabbar .weui-tab__bd-item--content').load('mobileView/home.html');
+
+            $('.yoga-login-button').on('click', function(){
+                var name = $('.yoga-login-username').val();
+                var pwd = $('.yoga-login-password').val();
+                if($.trim(name) === ''){
+                    $.alert("手机不能为空！", "警告！");
+                    return;
+                }
+                if($.trim(pwd) === ''){
+                    $.alert("密码不能为空！", "警告！");
+                    return;
+                }
+                var param = "tel="+name+"&password="+pwd;
+
+                callAjax('/websiteService/login', '', 'loginCallback', '', '', param, '');
+            });
         });
     </script>
 </head>
@@ -45,7 +61,14 @@
 
                 <div style="margin-bottom:55px;"></div>
             </div>
-
+            <div id="loginBar" class="weui-tab__bd-item">
+                <div class="weui-tab__bd-item--content">
+                    <img src="res/img/login-bg.jpg" class="yoga-login-bg-img">
+                    <input type="text" placeholder="请输入手机" class="yoga-login-username">
+                    <input type="password" placeholder="请输入密码" class="yoga-login-password">
+                    <a href="javascript:;" class="weui-btn weui-btn_primary yoga-login-button">开启美好一天</a>
+                </div>
+            </div>
 
         </div>
 

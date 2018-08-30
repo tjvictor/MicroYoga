@@ -31,7 +31,10 @@ function getCoursesCallback(data){
 }
 
 function getOneWeekScheduledCourses(){
-    callAjax('/websiteService/getOneWeekScheduledCourses', '', 'getOneWeekScheduledCoursesCallback', '', '', 'memberId=8025e911-91b3-498a-9989-0713b50f96ce', '');
+    var user = checkUser();
+    if(user){
+        callAjax('/websiteService/getOneWeekScheduledCourses', '', 'getOneWeekScheduledCoursesCallback', '', '', 'memberId='+user.id, '');
+    }
 }
 function getOneWeekScheduledCoursesCallback(data){
     if (data.status == "ok" && data.callBackData.length > 0) {
