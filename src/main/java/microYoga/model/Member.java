@@ -1,5 +1,10 @@
 package microYoga.model;
 
+import org.springframework.util.StringUtils;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Member {
     public String getId() {
         return id;
@@ -82,4 +87,19 @@ public class Member {
     private String expireDate;
     private int fee;
     private String remark;
+    private boolean isOutOfDate;
+
+    public boolean isOutOfDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if(StringUtils.isEmpty(expireDate)){
+            return false;
+        }
+        try {
+            Date expire = sdf.parse(expireDate);
+            Date now = new Date();
+            return expireDate.getT
+        } catch (ParseException e) {
+            return false;
+        }
+    }
 }

@@ -9,6 +9,8 @@ public interface NewsDao {
 
     List<News> getAllNews() throws SQLException;
 
+    List<News> getAllNewsBrief() throws SQLException;
+
     News getNewsById(String id) throws SQLException;
 
     void insertNews(News item) throws SQLException;

@@ -48,6 +48,7 @@ $('.yoga-login-button').on('click', function(){
 });
 function loginCallback(data){
     if (data.status == "ok" && data.callBackData){
+
         Cookies.set("meet-yoga-user", data.callBackData, { expires: 1 });
         $('#tabbar .weui-tab__bd-item--content').load('mobileView/home.html');
         close_login();

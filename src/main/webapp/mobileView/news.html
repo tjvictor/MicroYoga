@@ -1,11 +1,13 @@
 <script>
     $(function() {
+        getAllNewsBrief();
+
         $(document).off('click', '.yoga-open-popup').on('click', '.yoga-open-popup', function() {
-            $('#full-popup-container .yoga-popup-container-text').html('内容自定义，这里省略！！！');
-            $('#full-popup-container').popup();
+            var param = "id="+$(this).data('news-id');
+            callAjax('/websiteService/getNewsById', '', 'newsOpenPopup', '', '', param, '');
         });
 
-        $('.yoga-nav-go-back').on('click', function (){ $('.weui-tab__bd-item--content').load('mobileView/home.html'); });
+        $('.yoga-nav-go-back').on('click', function (){ $('#tabbar .weui-tab__bd-item--content').load('mobileView/home.html'); });
 });
 </script>
 
@@ -15,14 +17,14 @@
 
 <div class="page__bd">
     <div class="weui-panel weui-panel_access">
-        <div class="weui-panel__hd">珈瑜头条</div>
+        <div class="weui-panel__hd">瑜珈头条</div>
         <div class="weui-panel__bd">
             <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg yoga-open-popup">
                 <div class="weui-media-box__hd">
                     <img class="weui-media-box__thumb" src="res/img/temp/21.jpg" alt="" style="border-radius: 30px;">
                 </div>
                 <div class="weui-media-box__bd">
-                    <p class="weui-media-box__desc">万能的瑜伽---糖尿病患者也可以练习的瑜伽</p>
+                    <p class="weui-media-box__desc">万能的瑜珈---糖尿病患者也可以练习的瑜珈</p>
                 </div>
             </a>
             <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg yoga-open-popup">

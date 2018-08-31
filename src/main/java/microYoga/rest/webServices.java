@@ -2,6 +2,8 @@ package microYoga.rest;
 
 import microYoga.dao.CourseDao;
 import microYoga.dao.MemberDao;
+import microYoga.dao.NewsDao;
+import microYoga.dao.NotificationDao;
 import microYoga.dao.OrderDao;
 import microYoga.dao.PhotoDao;
 import microYoga.dao.ScheduleDao;
@@ -10,6 +12,8 @@ import microYoga.dao.VideoDao;
 import microYoga.model.Course;
 import microYoga.model.FileUploadEntity;
 import microYoga.model.Member;
+import microYoga.model.News;
+import microYoga.model.Notification;
 import microYoga.model.Order;
 import microYoga.model.Photo;
 import microYoga.model.PhotoWall;
@@ -81,6 +85,12 @@ public class webServices {
 
     @Autowired
     private MemberDao memberDaoImp;
+
+    @Autowired
+    private NotificationDao notificationDaoImp;
+
+    @Autowired
+    private NewsDao newsDaoImp;
 
     //region file upload
     @PostMapping("/fileUpload/{requestFileName}/{requestFileType}")
@@ -399,6 +409,58 @@ public class webServices {
             Member item = memberDaoImp.authenticateUser(tel,password);
             return new ResponseObject("ok", "查询成功", item);
         } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region notification
+    @RequestMapping(value = "/getNotificationBriefByCount", method = RequestMethod.GET)
+    public ResponseObject getNotificationBriefByCount(@RequestParam(value="topCount") int topCount) {
+
+        try {
+            List<Notification> items = notificationDaoImp.getTopNotificationBriefs(topCount);
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/getNotificationById", method = RequestMethod.GET)
+    public ResponseObject getNotificationById(@RequestParam(value="id") String id) {
+
+        try {
+            Notification item = notificationDaoImp.getNotificationById(id);
+            return new ResponseObject("ok", "查询成功", item);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region News
+    @RequestMapping(value = "/getAllNewsBrief", method = RequestMethod.GET)
+    public ResponseObject getAllNewsBrief() {
+
+        try {
+            List<News> items = newsDaoImp.getAllNewsBrief();
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/getNewsById", method = RequestMethod.GET)
+    public ResponseObject getNewsById(@RequestParam(value="id") String id) {
+
+        try {
+            News item = newsDaoImp.getNewsById(id);
+            return new ResponseObject("ok", "查询成功", item);
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new ResponseObject("error", "系统错误，请联系系统管理员");
         }
