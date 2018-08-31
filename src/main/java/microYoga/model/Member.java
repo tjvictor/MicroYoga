@@ -87,7 +87,7 @@ public class Member {
     private String expireDate;
     private int fee;
     private String remark;
-    private boolean isOutOfDate;
+    private boolean outOfDate;
 
     public boolean isOutOfDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -97,7 +97,7 @@ public class Member {
         try {
             Date expire = sdf.parse(expireDate);
             Date now = new Date();
-            return expire.compareTo(now) >= 0;
+            return expire.compareTo(now) < 0;
         } catch (ParseException e) {
             return false;
         }

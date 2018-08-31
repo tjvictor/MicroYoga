@@ -50,7 +50,7 @@ function getOneWeekScheduledCoursesCallback(data){
                 template += '   <div class="weui-media-box__bd">';
                 template += '       <div class="weui-media-box__bd weui-media-box__title">'+scheduleExt.courseName+'</div>';
                 template += '       <div class="weui-media-box_appmsg">';
-                template += '           <div style="width:200px;">';
+                template += '           <div style="width:180px;">';
                 template += '               <span class="text-font-size-14px" style="margin-right:5px;">难度</span>';
 
                 for(var rating = 0 ; rating < scheduleExt.courseRating ; rating++){

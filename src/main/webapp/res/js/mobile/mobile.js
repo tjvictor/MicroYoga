@@ -48,8 +48,12 @@ $('.yoga-login-button').on('click', function(){
 });
 function loginCallback(data){
     if (data.status == "ok" && data.callBackData){
-
+        if(data.callBackData.outOfDate){
+            $.alert("会员已经过期！！！","提示");
+            return;
+        }
         Cookies.set("meet-yoga-user", data.callBackData, { expires: 1 });
+        $.alert("登录成功！！！","提示");
         $('#tabbar .weui-tab__bd-item--content').load('mobileView/home.html');
         close_login();
     }else{
@@ -73,5 +77,11 @@ function close_login(){
         open_login();
         return false;
     }
-    return user;
+    return $.parseJSON(user);
+}
+
+function logout(){
+    Cookies.remove("meet-yoga-user");
+    $.alert("注销成功！！！","提示");
+    checkUser();
 }
