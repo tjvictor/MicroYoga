@@ -76,7 +76,7 @@
       $(document).on('click', '#show-login', function() {
         $.login({
           title: '登录',
-          text: '请输入用户名和密码',
+          text: '请输入用户手机和密码<p>测试用户13255621542, 密码123456</P>',
           onOK: function (username, password) {
             console.log(username, password);
             $.toast('登录成功!');

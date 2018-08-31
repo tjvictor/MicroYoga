@@ -5,14 +5,16 @@
             autoplay: 3000
         });
 
-        $('.yoga-open-popup').on('click', function() {
-            $('#full-popup-container .weui-popup-container-text').html('内容可以自定义，这里省略!!!');
-            $('#full-popup-container').popup();
+        $(document).off('click', '.yoga-open-popup').on('click', '.yoga-open-popup', function() {
+            var param = "id="+$(this).data('notification-id');
+            callAjax('/websiteService/getNotificationById', '', 'notificationOpenPopup', '', '', param, '');
         });
 
         $('.weui-grid').on('click', function() {
-            $('.weui-tab__bd-item--content').load($(this).data("target"));
+            $('#tabbar .weui-tab__bd-item--content').load($(this).data("target"));
         });
+
+        getTop5Notification();
 });
 </script>
 
@@ -39,22 +41,16 @@
 
 <!-- Notification -->
 <div class="weui-panel weui-panel_access">
-    <div class="weui-panel__hd">公告</div>
-    <div class="weui-panel__ft">
-        <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
-            <div class="weui-cell__bd auto-clip yoga-open-popup" data-target="#notification-full">
-                遇见瑜伽扩店升级---亲子瑜伽
-            </div>
-            <span class="weui-cell__ft"></span>
-        </a>
-    </div>
-    <div class="weui-panel__ft">
-        <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
-            <div class="weui-cell__bd auto-clip yoga-open-popup" data-target="#notification-full">
-                现在报名私教有惊喜
-            </div>
-            <span class="weui-cell__ft"></span>
-        </a>
+    <div class="weui-panel__hd">最新公告</div>
+    <div class="yoga-home-notification">
+        <div class="weui-panel__ft">
+            <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
+                <div class="weui-cell__bd auto-clip yoga-open-popup">
+                    暂时没有任何公告
+                </div>
+                <span class="weui-cell__ft"></span>
+            </a>
+        </div>
     </div>
 </div>
 
@@ -83,7 +79,7 @@
             <div class="weui-grid__icon" style="width:48px;height:48px;">
                 <img src="res/img/news.png" alt="">
             </div>
-            <p class="weui-grid__label">珈瑜头条</p>
+            <p class="weui-grid__label">瑜伽头条</p>
         </a>
         <a class="weui-grid js_grid" data-target="mobileView/picture.html">
             <div class="weui-grid__icon" style="width:48px;height:48px;">

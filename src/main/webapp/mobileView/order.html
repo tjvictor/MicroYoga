@@ -1,5 +1,96 @@
-<div>
-    <h1>
-        约课功能暂未开放
-    </h1>
+<script>
+    $(function (){
+        var user = checkUser();
+        if(user){
+            getOneWeekScheduledCourses();
+        }
+
+        $(document).off('click', '.order-button').on('click', '.order-button', function() {
+            orderCourse($(this).data('schedule-id'));
+        });
+
+        $(document).off('click', '.cancel-button').on('click', '.cancel-button', function() {
+            cancelCourse($(this).data('order-id'), $(this).data('schedule-id'));
+        });
+    });
+</script>
+
+
+<div class="weui-tab">
+    <div class="weui-navbar">
+        <a href="#tab0" class="weui-navbar__item weui-bar__item--on"></a>
+        <a href="#tab1" class="weui-navbar__item"></a>
+        <a href="#tab2" class="weui-navbar__item"></a>
+        <a href="#tab3" class="weui-navbar__item"></a>
+        <a href="#tab4" class="weui-navbar__item"></a>
+        <a href="#tab5" class="weui-navbar__item"></a>
+        <a href="#tab6" class="weui-navbar__item"></a>
+
+    </div>
+    <div class="weui-tab__bd" style="padding-top:80px;">
+        <div id="tab0" class="weui-tab__bd-item weui-tab__bd-item--active">
+            <div class="page__bd">
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__bd">
+                        <p style="padding:0.1rem;color:red;">今日无课程</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tab1" class="weui-tab__bd-item">
+            <div class="page__bd">
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__bd">
+                        <p style="padding:0.1rem;color:red;">今日无课程</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tab2" class="weui-tab__bd-item">
+            <div class="page__bd">
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__bd">
+                        <p style="padding:0.1rem;color:red;">今日无课程</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tab3" class="weui-tab__bd-item">
+            <div class="page__bd">
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__bd">
+                        <p style="padding:0.1rem;color:red;">今日无课程</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tab4" class="weui-tab__bd-item">
+            <div class="page__bd">
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__bd">
+                        <p style="padding:0.1rem;color:red;">今日无课程</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tab5" class="weui-tab__bd-item">
+            <div class="page__bd">
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__bd">
+                        <p style="padding:0.1rem;color:red;">今日无课程</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tab6" class="weui-tab__bd-item">
+            <div class="page__bd">
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__bd">
+                        <p style="padding:0.1rem;color:red;">今日无课程</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>

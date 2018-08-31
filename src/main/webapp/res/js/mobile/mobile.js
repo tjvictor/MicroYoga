@@ -1,6 +1,6 @@
 function callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoading) {
     callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoading, true);
-}
+};
 
 function callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoading, async) {
     var aPost = iPost ? 'POST': 'GET';
@@ -33,70 +33,45 @@ function callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoad
     });
 }
 
-//photo start
-function getPhotoWallTotalCount(){
-    callAjax('/websiteService/getPhotoWallTotalCount', '', 'getPhotoWallTotalCountCallback', '', '', '', '', false);
-}
-function getPhotoWallTotalCountCallback(data){
-    if (data.status == "ok") {
-        $('#photo_pagination').pagination({
-            totalNumber: data.callBackData,
-            pageSize: 5,
-            onSelectPage: getAllPhotoWallNextPage,
-        });
+$('.yoga-login-button').on('click', function(){
+    var name = $('.yoga-login-username').val();
+    var pwd = $('.yoga-login-password').val();
+    if($.trim(name) === ''){
+        $.alert("手机不能为空！", "警告！");
+    }
+    if($.trim(pwd) === ''){
+        $.alert("密码不能为空！", "警告！");
+    }
+    var param = "tel="+name+"&password="+pwd;
+
+    callAjax('/websiteService/login', '', 'loginCallback', '', '', param, '');
+});
+function loginCallback(data){
+    if (data.status == "ok" && data.callBackData){
+
+        Cookies.set("meet-yoga-user", data.callBackData, { expires: 1 });
+        $('#tabbar .weui-tab__bd-item--content').load('mobileView/home.html');
+        close_login();
+    }else{
+        $.alert("手机号码不存在或是密码不正确！请重新登录", "警告！");
     }
 }
-function getAllPhotoWallNextPage(pageNumber, pageSize){
-    getAllPhotoWallWithPhotos(pageNumber, pageSize);
-    $('#photo_pagination').data('paginationObj').nextPage();
+function open_login(){
+    $('.yoga-login-username').val('');
+    $('.yoga-login-password').val('');
+    $('#loginBar').addClass('weui-tab__bd-item--active');
+    $('#tabbar').removeClass('weui-tab__bd-item--active');
+}
+function close_login(){
+    $('#tabbar').addClass('weui-tab__bd-item--active');
+    $('#loginBar').removeClass('weui-tab__bd-item--active');
 }
 
-function getAllPhotoWallWithPhotos(pageNumber, pageSize){
-    if(pageNumber===1){
-        $('#photoWallView').html('');
+    function checkUser(){
+    var user = Cookies.get('meet-yoga-user');
+    if(!user){
+        open_login();
+        return false;
     }
-    var param = "pageNumber="+pageNumber+"&pageSize="+pageSize;
-    callAjax('/websiteService/getAllPhotoWallWithPhotos', '', 'getAllPhotoWallWithPhotosCallback', '', '', param, '');
+    return user;
 }
-function getAllPhotoWallWithPhotosCallback(data){
-    if (data.status == "ok" && data.callBackData.length > 0) {
-        var template = '';
-        for (var i = 0; i < data.callBackData.length; i++) {
-            var photoWall = data.callBackData[i];
-            var photoWallData = [];
-            template += '<div class="page__bd div-gap-10px">';
-            template += '   <div class="weui-panel weui-panel_access">';
-            template += '       <div class="weui-panel__hd">';
-            template += '           <div class="left auto-clip" style="width:65%">' + photoWall.name + '</div>';
-            template += '           <div class="right">' + photoWall.date + '</div>';
-            template += '           <div class="clear"></div>';
-            template += '       </div>';
-            template += '       <div style="padding:20px;">';
-            template += '           <div class="weui-panel__bd">';
-            template += '               <div id="' + photoWall.id + '" class="weui-grids">';
-
-            for(var j = 0; j < photoWall.photoList.length; j++){
-                if(j < 9){
-                    template += '           <a class="weui-grid js_grid" style="padding:10px;"><img class="yoga-photo-browse" src="' + photoWall.photoList[j].thumbUrl + '" data-target="' + j + '" alt="" style="width:100%;height:100%" onclick="yogaPhotoBrowse(this)"></a>';
-                }
-                var caption = (j + 1) + " / " + photoWall.photoList.length;
-                photoWallData.push({
-                    "image": photoWall.photoList[j].url,
-                    "caption": caption
-                });
-            }
-
-            template += '               </div>';
-            template += '           </div>';
-            template += '       </div>';
-            template += '   </div>';
-            template += '</div>';
-            $('#photoWallView').data(photoWall.id, photoWallData);
-        }
-
-        $('#photoWallView').html($('#photoWallView').html()+template);
-    }else {
-        $('#photoWallView').html('<p style="padding:0.1rem;color:red;">此墙还是空的，快来上传你美丽的照片吧。</p>');
-    }
-}
-//photo end

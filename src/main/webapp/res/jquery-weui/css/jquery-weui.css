@@ -837,8 +837,10 @@ body {
   color: #888;
 }
 .weui-navbar__item.weui-bar__item--on {
-  color: #666;
-  background-color: #f1f1f1;
+  background-color: green;
+}
+.weui-navbar__item.weui-bar__item--on p{
+  color: #FFFFFF;
 }
 .weui-tab__bd {
   box-sizing: border-box;

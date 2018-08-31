@@ -1,11 +1,11 @@
 package microYoga.model;
 
-public class Teacher {
+public class Course {
     private String id;
     private String name;
     private String avatar;
-    private String brief;
     private String introduction;
+    private int rating;
 
     public String getId() {
         return id;
@@ -39,11 +39,11 @@ public class Teacher {
         this.introduction = introduction;
     }
 
-    public String getBrief() {
-        return brief;
+    public int getRating() {
+        return rating;
     }
 
-    public void setBrief(String brief) {
-        this.brief = brief;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

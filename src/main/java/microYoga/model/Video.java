@@ -1,11 +1,12 @@
 package microYoga.model;
 
-public class Teacher {
+public class Video {
     private String id;
     private String name;
-    private String avatar;
     private String brief;
-    private String introduction;
+    private String type;
+    private String imgPath;
+    private String videoPath;
 
     public String getId() {
         return id;
@@ -23,20 +24,28 @@ public class Teacher {
         this.name = name;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getType() {
+        return type;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getIntroduction() {
-        return introduction;
+    public String getImgPath() {
+        return imgPath;
     }
 
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
     }
 
     public String getBrief() {

@@ -2,6 +2,8 @@
     $(function () {
         getAllPhotoWallWithPhotos(1, 5);
         getPhotoWallTotalCount();
+
+        $('.yoga-nav-go-back').on('click', function (){ $('#tabbar .weui-tab__bd-item--content').load('mobileView/home.html'); });
     });
 
     function yogaPhotoBrowse(item) {
@@ -24,7 +26,9 @@
         }).open();
     }
 </script>
-
+<div class="yoga-nav-go-back">
+    <img src="res/img/arrow_left_24px.png" >
+</div>
 <div class="page__bd">
     <div class="weui-panel weui-panel_access">
         <div class="weui-panel__hd">学员风采</div>

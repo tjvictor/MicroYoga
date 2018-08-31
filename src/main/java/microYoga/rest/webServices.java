@@ -1,10 +1,26 @@
 package microYoga.rest;
 
+import microYoga.dao.CourseDao;
+import microYoga.dao.MemberDao;
+import microYoga.dao.NewsDao;
+import microYoga.dao.NotificationDao;
+import microYoga.dao.OrderDao;
 import microYoga.dao.PhotoDao;
+import microYoga.dao.ScheduleDao;
+import microYoga.dao.TeacherDao;
+import microYoga.dao.VideoDao;
+import microYoga.model.Course;
 import microYoga.model.FileUploadEntity;
+import microYoga.model.Member;
+import microYoga.model.News;
+import microYoga.model.Notification;
+import microYoga.model.Order;
 import microYoga.model.Photo;
 import microYoga.model.PhotoWall;
 import microYoga.model.ResponseObject;
+import microYoga.model.ScheduleWeek;
+import microYoga.model.Teacher;
+import microYoga.model.Video;
 import microYoga.utils.CommonUtils;
 import microYoga.utils.PhotoUtils;
 
@@ -18,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
@@ -30,6 +47,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -49,6 +67,30 @@ public class webServices {
 
     @Autowired
     private PhotoDao photoDaoImp;
+
+    @Autowired
+    private TeacherDao teacherDaoImp;
+
+    @Autowired
+    private CourseDao courseDaoImp;
+
+    @Autowired
+    private VideoDao videoDaoImp;
+
+    @Autowired
+    private OrderDao orderDaoImp;
+
+    @Autowired
+    private ScheduleDao scheduleDaoImp;
+
+    @Autowired
+    private MemberDao memberDaoImp;
+
+    @Autowired
+    private NotificationDao notificationDaoImp;
+
+    @Autowired
+    private NewsDao newsDaoImp;
 
     //region file upload
     @PostMapping("/fileUpload/{requestFileName}/{requestFileType}")
@@ -176,7 +218,7 @@ public class webServices {
     }
 
     @RequestMapping(value = "/getAllPhotoWallWithPhotos", method = RequestMethod.GET)
-    public ResponseObject getAllPhotoWallWithPhotos(@FormParam("pageNumber") int pageNumber, @FormParam("pageSize") int pageSize){
+    public ResponseObject getAllPhotoWallWithPhotos(@RequestParam("pageNumber") int pageNumber, @RequestParam("pageSize") int pageSize){
         try {
             List<PhotoWall> items = photoDaoImp.getAllPhotoWallWithPhotos(pageNumber, pageSize);
             return new ResponseObject("ok", "查询成功", items);
@@ -242,7 +284,7 @@ public class webServices {
     }
 
     @RequestMapping(value = "/deletePhotoWall", method = RequestMethod.GET)
-    public ResponseObject deletePhotoWall(@FormParam("id") String id) {
+    public ResponseObject deletePhotoWall(@RequestParam("id") String id) {
 
         try {
             photoDaoImp.deletePhotoWall(id);
@@ -254,7 +296,7 @@ public class webServices {
     }
 
     @RequestMapping(value = "/deletePhoto", method = RequestMethod.GET)
-    public ResponseObject deletePhoto(@FormParam("id") String id) {
+    public ResponseObject deletePhoto(@RequestParam("id") String id) {
 
         try {
             photoDaoImp.deletePhoto(id);
@@ -266,4 +308,162 @@ public class webServices {
     }
     //endregion
 
+    //region teacher
+    @RequestMapping(value = "/getTeachers", method = RequestMethod.GET)
+    public ResponseObject getTeachers(){
+        try {
+            List<Teacher> items = teacherDaoImp.getTeachers();
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region course
+    @RequestMapping(value = "/getCourses", method = RequestMethod.GET)
+    public ResponseObject getCourses(){
+        try {
+            List<Course> items = courseDaoImp.getCourses();
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region video
+    @RequestMapping(value = "/getVideos", method = RequestMethod.GET)
+    public ResponseObject getVideos(){
+        try {
+            List<Video> items = videoDaoImp.getVideos();
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region Orders
+    @RequestMapping(value = "/getOneWeekScheduledCourses", method = RequestMethod.GET)
+    public ResponseObject getOneWeekScheduledCourses(@RequestParam("memberId") String memberId ){
+        try {
+            List<ScheduleWeek> items = new ArrayList<ScheduleWeek>();
+            Date today = new Date();
+            for(int day = 0; day < 7; day++){
+                ScheduleWeek item = new ScheduleWeek();
+                Date current = CommonUtils.dateAddDay(today, day);
+                item.setWeekName(CommonUtils.getWeekName(current));
+                item.setShortDate(CommonUtils.getMonthDay(current));
+
+                item.setScheduleExts(scheduleDaoImp.getOneDayScheduledCourses(CommonUtils.getDateStr(current), memberId));
+
+                items.add(item);
+            }
+
+
+
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/insertOrder", method = RequestMethod.GET)
+    public ResponseObject insertOrder(@RequestParam("scheduleId") String scheduleId, @RequestParam("memberId") String memberId){
+        try {
+            String id = UUID.randomUUID().toString();
+            Order item = new Order();
+            item.setId(id);
+            item.setScheduleId(scheduleId);
+            item.setMemberId(memberId);
+            item.setDateTime(CommonUtils.getCurrentDateTime());
+            orderDaoImp.insertOrder(item);
+            return new ResponseObject("ok", "新增成功", id);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/deleteOrder", method = RequestMethod.GET)
+    public ResponseObject deleteOrder(@RequestParam("orderId") String orderId){
+        try {
+            orderDaoImp.deleteOrder(orderId);
+            return new ResponseObject("ok", "删除成功", orderId);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region Member
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ResponseObject login(@RequestParam("tel") String tel, @RequestParam("password") String password ){
+        try {
+            Member item = memberDaoImp.authenticateUser(tel,password);
+            return new ResponseObject("ok", "查询成功", item);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region notification
+    @RequestMapping(value = "/getNotificationBriefByCount", method = RequestMethod.GET)
+    public ResponseObject getNotificationBriefByCount(@RequestParam(value="topCount") int topCount) {
+
+        try {
+            List<Notification> items = notificationDaoImp.getTopNotificationBriefs(topCount);
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/getNotificationById", method = RequestMethod.GET)
+    public ResponseObject getNotificationById(@RequestParam(value="id") String id) {
+
+        try {
+            Notification item = notificationDaoImp.getNotificationById(id);
+            return new ResponseObject("ok", "查询成功", item);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region News
+    @RequestMapping(value = "/getAllNewsBrief", method = RequestMethod.GET)
+    public ResponseObject getAllNewsBrief() {
+
+        try {
+            List<News> items = newsDaoImp.getAllNewsBrief();
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/getNewsById", method = RequestMethod.GET)
+    public ResponseObject getNewsById(@RequestParam(value="id") String id) {
+
+        try {
+            News item = newsDaoImp.getNewsById(id);
+            return new ResponseObject("ok", "查询成功", item);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
 }
