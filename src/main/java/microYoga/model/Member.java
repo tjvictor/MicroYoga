@@ -91,13 +91,13 @@ public class Member {
 
     public boolean isOutOfDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        if(StringUtils.isEmpty(expireDate)){
+        if (StringUtils.isEmpty(expireDate)) {
             return false;
         }
         try {
             Date expire = sdf.parse(expireDate);
             Date now = new Date();
-            return expireDate.getT
+            return expire.compareTo(now) >= 0;
         } catch (ParseException e) {
             return false;
         }
