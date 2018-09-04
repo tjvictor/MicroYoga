@@ -8,6 +8,10 @@ public class WeChatContant {
     public static final String APP_SECRET = "appsecret";
     // Token
     public static final String TOKEN = "ecity-power";
+
+    public static final String REQ_BIZ_REGISTER = "register";
+    public static final String REQ_BIZ_PARTICIPATE = "participate";
+
     public static final String RESP_MESSAGE_TYPE_TEXT = "text";
     public static final Object REQ_MESSAGE_TYPE_TEXT = "text";
     public static final Object REQ_MESSAGE_TYPE_IMAGE = "image";

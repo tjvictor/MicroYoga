@@ -16,10 +16,14 @@ public interface WeChatDao {
 
     void insertActivityParticipate(Activity_Participate item) throws SQLException;
 
-    List<Activity> getActivityById(String id) throws SQLException;
+    Activity getActivityById(String id) throws SQLException;
 
     List<Activity_Register> getActivityRegistersByActivityId(String activityId) throws SQLException;
 
-    List<Activity_Participate> getActivityParticipatesByActivityIdAndRegisterId(String activityId, String registerId) throws SQLException;
+    List<Activity_Participate> getActivityParticipatesByActivityRegisterId(String activityRegisterId) throws SQLException;
+
+    boolean isRegisterExist(String activityId, String registerId) throws SQLException;
+
+    boolean isParticipateExist(String activityRegisterId, String participateId) throws SQLException;
 }
 

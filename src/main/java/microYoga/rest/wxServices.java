@@ -196,7 +196,7 @@ public class wxServices {
             // 获取用户信息
             SNSUserInfo snsUserInfo = WeChatUtil.getSNSUserInfo(accessToken, openId);
 
-            response.sendRedirect("/test.html?openId="+openId+"&nickname="+snsUserInfo.getNickname());
+            response.sendRedirect("/test.html?openId="+openId+"&nickname="+snsUserInfo.getNickName());
 
             // 设置要传递的参数
             //request.setAttribute("snsUserInfo", snsUserInfo);
@@ -206,4 +206,19 @@ public class wxServices {
         //request.getRequestDispatcher("index.jsp").forward(request, response);
         response.sendRedirect("/rejectAuth.html");
     }
+
+    //region Biz Logic
+    @RequestMapping("/generatePersonalityPage")
+    public void generatePersonalityPage(HttpServletResponse response,
+                                        @RequestParam(value = "activityId") String activityId,
+                                        @RequestParam(value = "requestMode") String requestMode){
+
+
+
+    }
+
+    private String getWxOpenId(){
+
+    }
+    //endregion
 }
