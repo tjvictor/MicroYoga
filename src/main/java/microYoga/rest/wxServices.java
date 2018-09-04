@@ -6,6 +6,7 @@ import microYoga.model.wx.WeChatContant;
 import microYoga.model.wx.WeixinOauth2Token;
 import microYoga.utils.WeChatUtil;
 
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,6 +29,11 @@ public class wxServices {
 
     //region private
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String test(){
+        return "test";
+    }
 
     @RequestMapping(value = "/wx", method = RequestMethod.GET)
     public String login(@RequestParam(value = "signature") String signature,
@@ -208,17 +214,59 @@ public class wxServices {
     }
 
     //region Biz Logic
+    /*
+    invoke below link in wechat client explorer, then wechat server will callback generatePersonalityPage function;
+    https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://ea8156c2.ngrok.io/wxServices/generatePersonalityPage&response_type=code&scope=snsapi_base&state=activityId,register#wechat_redirect
+    */
     @RequestMapping("/generatePersonalityPage")
     public void generatePersonalityPage(HttpServletResponse response,
-                                        @RequestParam(value = "activityId") String activityId,
-                                        @RequestParam(value = "requestMode") String requestMode){
+                                        @RequestParam(value = "state") String state,
+                                        @RequestParam(value = "code") String snsapi_base_code){
 
-
+//        String activityId = state.split(",")[0];
+//        String requestMode = state.split(",")[1];
+//        System.out.println(activityId);
+//        System.out.println(requestMode);
+//
+//        String openId = getWxOpenIdBySNSApi_Base(snsapi_base_code);
+//        System.out.println(openId);
 
     }
 
-    private String getWxOpenId(){
+    private String getWxOpenIdBySNSApi_Base(String snsapi_base_code){
+        String requestUrl = String.format("https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code", WeChatContant.APP_ID, WeChatContant.APP_SECRET, snsapi_base_code);
 
+        JSONObject jsonObject = WeChatUtil.httpsRequest(requestUrl, "GET", null);
+        WeixinOauth2Token wat = new WeixinOauth2Token();
+        if (null != jsonObject) {
+            try {
+                wat = new WeixinOauth2Token();
+                wat.setAccessToken(jsonObject.getString("access_token"));
+                wat.setExpiresIn(jsonObject.getInt("expires_in"));
+                wat.setRefreshToken(jsonObject.getString("refresh_token"));
+                wat.setOpenId(jsonObject.getString("openid"));
+                wat.setScope(jsonObject.getString("scope"));
+            } catch (Exception e) {
+                wat = null;
+                int errorCode = jsonObject.getInt("errcode");
+                String errorMsg = jsonObject.getString("errmsg");
+                //log.error("获取网页授权凭证失败 errcode:{} errmsg:{}", errorCode, errorMsg);
+            }
+        }
+
+        return wat.getOpenId();
+    }
+
+    /*
+    https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://ea8156c2.ngrok.io/wxServices/generatePersonalityPage&response_type=code&scope=snsapi_userinfo&state=activityId,register#wechat_redirect
+    https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx573faabcfb33a8a0&secret=83f320c9694458ddf718451ae12f6b80&code=081Hezb50YWj0K1e12e50b5xb50Hezbt&grant_type=authorization_code
+    https://api.weixin.qq.com/sns/userinfo?access_token=13_e4yg1899-hgY8M4AXKOPSF399jEaE6uKkM1dWfpWhF5kmubmibOAO6fkTYeFCHV2SPGSivPb2kxVmWHFeV_GuA&openid=oguMF1vk1hV17FHMYS4pTtOr6uQU&lang=zh_CN
+
+    获取第二步的refresh_token后，请求以下链接获取access_token：
+    https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=APPID&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
+     */
+    private String getSNSUserInfoBySNSApi_UserInfo(){
+        return "";
     }
     //endregion
 }

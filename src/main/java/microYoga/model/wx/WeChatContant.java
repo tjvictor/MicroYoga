@@ -3,11 +3,11 @@ package microYoga.model.wx;
 public class WeChatContant {
 
     //APPID
-    public static final String APP_ID = "appid";
+    public static final String APP_ID = "wx573faabcfb33a8a0";
     //appsecret
-    public static final String APP_SECRET = "appsecret";
+    public static final String APP_SECRET = "83f320c9694458ddf718451ae12f6b80";
     // Token
-    public static final String TOKEN = "ecity-power";
+    public static final String TOKEN = "tjpower";
 
     public static final String REQ_BIZ_REGISTER = "register";
     public static final String REQ_BIZ_PARTICIPATE = "participate";

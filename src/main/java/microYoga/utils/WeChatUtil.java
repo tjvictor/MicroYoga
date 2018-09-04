@@ -285,9 +285,9 @@ public class WeChatUtil {
                 // 用户的标识
                 snsUserInfo.setOpenId(jsonObject.getString("openid"));
                 // 昵称
-                snsUserInfo.setNickname(jsonObject.getString("nickname"));
+                snsUserInfo.setNickName(jsonObject.getString("nickname"));
                 // 性别（1是男性，2是女性，0是未知）
-                snsUserInfo.setSex(jsonObject.getInt("sex"));
+                snsUserInfo.setSex(jsonObject.getString("sex"));
                 // 用户所在国家
                 snsUserInfo.setCountry(jsonObject.getString("country"));
                 // 用户所在省份
