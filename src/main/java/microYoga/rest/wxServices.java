@@ -1,26 +1,36 @@
 package microYoga.rest;
 
+import microYoga.dao.WeChatDao;
+import microYoga.model.wx.Activity;
+import microYoga.model.wx.Activity_Participate;
+import microYoga.model.wx.Activity_Register;
 import microYoga.model.wx.ArticleItem;
+import microYoga.model.wx.OauthToken;
 import microYoga.model.wx.SNSUserInfo;
 import microYoga.model.wx.WeChatContant;
-import microYoga.model.wx.WeixinOauth2Token;
+import microYoga.model.wx.WxError;
+import microYoga.model.wx.WxResponse;
+import microYoga.utils.CommonUtils;
 import microYoga.utils.WeChatUtil;
-
 import net.sf.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -29,6 +39,9 @@ public class wxServices {
 
     //region private
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private WeChatDao weChatDaoImp;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test(){
@@ -181,82 +194,156 @@ public class wxServices {
         response.sendRedirect("/test.html");
     }
 
-    @RequestMapping("/oauth")
-    public void auth(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setCharacterEncoding("utf-8");
-
-        // 用户同意授权后，能获取到code
-        String code = request.getParameter("code");
-        String state = request.getParameter("state");
-
-        // 用户同意授权
-        if (!"authdeny".equals(code)) {
-            // 获取网页授权access_token
-            WeixinOauth2Token weixinOauth2Token = WeChatUtil.getOauth2AccessToken(WeChatContant.APP_ID, WeChatContant.APP_SECRET, code);
-            // 网页授权接口访问凭证
-            String accessToken = weixinOauth2Token.getAccessToken();
-            // 用户标识
-            String openId = weixinOauth2Token.getOpenId();
-            // 获取用户信息
-            SNSUserInfo snsUserInfo = WeChatUtil.getSNSUserInfo(accessToken, openId);
-
-            response.sendRedirect("/test.html?openId="+openId+"&nickname="+snsUserInfo.getNickName());
-
-            // 设置要传递的参数
-            //request.setAttribute("snsUserInfo", snsUserInfo);
-            //request.setAttribute("state", state);
-        }
-        // 跳转到index.jsp
-        //request.getRequestDispatcher("index.jsp").forward(request, response);
-        response.sendRedirect("/rejectAuth.html");
-    }
-
     //region Biz Logic
     /*
     invoke below link in wechat client explorer, then wechat server will callback generatePersonalityPage function;
     https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://ea8156c2.ngrok.io/wxServices/generatePersonalityPage&response_type=code&scope=snsapi_base&state=activityId,register#wechat_redirect
     */
-    @RequestMapping("/generatePersonalityPage")
-    public void generatePersonalityPage(HttpServletResponse response,
+    @RequestMapping("/generateRegisterPage")
+    public void generateRegisterPage(HttpServletResponse response,
                                         @RequestParam(value = "state") String state,
-                                        @RequestParam(value = "code") String snsapi_base_code){
+                                        @RequestParam(value = "code") String snsapi_base_code) throws IOException, SQLException {
 
-//        String activityId = state.split(",")[0];
-//        String requestMode = state.split(",")[1];
-//        System.out.println(activityId);
-//        System.out.println(requestMode);
-//
-//        String openId = getWxOpenIdBySNSApi_Base(snsapi_base_code);
-//        System.out.println(openId);
+        String activityId = state.split(",")[0];
+        String requestMode = state.split(",")[1];
+        Activity activity = weChatDaoImp.getActivityById(activityId);
+        WxResponse wxResponse = getWxOpenIdBySNSApi_Base(response, snsapi_base_code);
+        if(wxResponse.getOauthToken() == null){
+            response.sendRedirect("/activity/error.html?errcode="+wxResponse.getWxError().getErrorCode()+"&errmsg="+wxResponse.getWxError().getErrorMessage());
+            return;
+        }
 
+        Activity_Register activityRegister = weChatDaoImp.getActivityRegisterByActivityIdAndRegisterId(activityId, wxResponse.getOauthToken().getOpenId());
+        if(activityRegister != null){
+            String participateUrl = String.format("%s?activityRegisterId=%s&nickName=%s",
+                    activity.getRegisterPage(), activityRegister.getId(), activityRegister.getRegisterName());
+            response.sendRedirect(participateUrl);
+            return;
+        }
+
+        OauthToken token = weChatDaoImp.getOauthTokenByOpenId(wxResponse.getOauthToken().getOpenId());
+        if(StringUtils.isEmpty(token.getAccessToken())){
+            requestSNSApi_UserInfo_Code(response, state);
+            return;
+        }else{
+            wxResponse = getSNSUserInfoByAccessToken(token.getAccessToken(), token.getOpenId());
+            if(wxResponse.getSnsUserInfo() == null){
+                //refresh access token
+                wxResponse = refreshOauthToken(token);
+                if(wxResponse.getOauthToken() == null){
+                    //refresh failed, re launch user info authentication
+                    requestSNSApi_UserInfo_Code(response, state);
+                    return;
+                }
+                //refresh successfully, re get user info
+                wxResponse = getSNSUserInfoByAccessToken(token.getAccessToken(), token.getOpenId());
+                if(wxResponse.getSnsUserInfo() == null){
+                    response.sendRedirect("/activity/error.html?errcode="+wxResponse.getWxError().getErrorCode()+"&errmsg="+wxResponse.getWxError().getErrorMessage());
+                    return;
+                }
+            }
+
+            Activity_Register item = new Activity_Register();
+            item.setId(UUID.randomUUID().toString());
+            item.setActivityId(activityId);
+            item.setRegisterId(wxResponse.getSnsUserInfo().getOpenId());
+            item.setRegisterName(wxResponse.getSnsUserInfo().getNickName());
+            item.setDate(CommonUtils.getCurrentDateTime());
+            weChatDaoImp.insertActivityRegister(item);
+            String participateUrl = String.format("%s?activityId=%s&nickName=%s",
+                    activity.getParticipatePage(), activity.getId(), item.getRegisterName());
+            response.sendRedirect(participateUrl);
+            return;
+        }
     }
 
-    private String getWxOpenIdBySNSApi_Base(String snsapi_base_code){
-        String requestUrl = String.format("https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code", WeChatContant.APP_ID, WeChatContant.APP_SECRET, snsapi_base_code);
+    @RequestMapping("/generateParticipatePage")
+    public void generateParticipatePage(HttpServletResponse response,
+                                        @RequestParam(value = "state") String state,
+                                        @RequestParam(value = "code") String snsapi_base_code) throws IOException, SQLException {
+        String activityRegisterId = state.split(",")[0];
+        String requestMode = state.split(",")[1];
+        Activity_Register activityRegister = weChatDaoImp.getActivityRegisterById(activityRegisterId);
+        Activity activity = weChatDaoImp.getActivityById(activityRegister.getActivityId());
+        WxResponse wxResponse = getWxOpenIdBySNSApi_Base(response, snsapi_base_code);
+        if(wxResponse.getOauthToken() == null){
+            response.sendRedirect("/activity/error.html?errcode="+wxResponse.getWxError().getErrorCode()+"&errmsg="+wxResponse.getWxError().getErrorMessage());
+            return;
+        }
 
+        OauthToken token = weChatDaoImp.getOauthTokenByOpenId(wxResponse.getOauthToken().getOpenId());
+        if(StringUtils.isEmpty(token.getAccessToken())){
+            requestSNSApi_UserInfo_Code(response, state);
+            return;
+        }else{
+            wxResponse = getSNSUserInfoByAccessToken(token.getAccessToken(), token.getOpenId());
+            if(wxResponse.getSnsUserInfo() == null){
+                //refresh access token
+                wxResponse = refreshOauthToken(token);
+                if(wxResponse.getOauthToken() == null){
+                    //refresh failed, re launch user info authentication
+                    requestSNSApi_UserInfo_Code(response, state);
+                    return;
+                }
+                //refresh successfully, re get user info
+                wxResponse = getSNSUserInfoByAccessToken(token.getAccessToken(), token.getOpenId());
+                if(wxResponse.getSnsUserInfo() == null){
+                    response.sendRedirect("/activity/error.html?errcode="+wxResponse.getWxError().getErrorCode()+"&errmsg="+wxResponse.getWxError().getErrorMessage());
+                    return;
+                }
+            }
+
+            Activity_Participate item = new Activity_Participate();
+            item.setId(UUID.randomUUID().toString());
+            item.setActivityRegisterId(activityRegisterId);
+            item.setParticipateId(wxResponse.getSnsUserInfo().getOpenId());
+            item.setParticipateName(wxResponse.getSnsUserInfo().getNickName());
+            item.setDate(CommonUtils.getCurrentDateTime());
+            weChatDaoImp.insertActivityParticipate(item);
+            String participateUrl = String.format("%s?activityRegisterId=%s&nickName=%s",
+                    activity.getRegisterPage(), item.getId(), item.getParticipateName());
+            response.sendRedirect(participateUrl);
+            return;
+        }
+    }
+
+    private WxResponse getWxOpenIdBySNSApi_Base(HttpServletResponse response, String snsapi_base_code) throws IOException {
+        WxResponse wxResponse = new WxResponse();
+        String requestUrl = String.format("https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code", WeChatContant.APP_ID, WeChatContant.APP_SECRET, snsapi_base_code);
         JSONObject jsonObject = WeChatUtil.httpsRequest(requestUrl, "GET", null);
-        WeixinOauth2Token wat = new WeixinOauth2Token();
+        String openId = "";
         if (null != jsonObject) {
             try {
-                wat = new WeixinOauth2Token();
-                wat.setAccessToken(jsonObject.getString("access_token"));
-                wat.setExpiresIn(jsonObject.getInt("expires_in"));
-                wat.setRefreshToken(jsonObject.getString("refresh_token"));
-                wat.setOpenId(jsonObject.getString("openid"));
-                wat.setScope(jsonObject.getString("scope"));
-            } catch (Exception e) {
-                wat = null;
-                int errorCode = jsonObject.getInt("errcode");
-                String errorMsg = jsonObject.getString("errmsg");
-                //log.error("获取网页授权凭证失败 errcode:{} errmsg:{}", errorCode, errorMsg);
+                wxResponse.setOauthToken(fillOauthTokenEntity(jsonObject));
+            }catch (Exception e){
+                wxResponse.setWxError(fillWxErrorEntity(jsonObject));
             }
         }
 
-        return wat.getOpenId();
+        return wxResponse;
     }
 
+    private void requestSNSApi_UserInfo_Code(HttpServletResponse response, String state) throws IOException {
+        String url = String.format("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s/wxServices/getSNSUserInfoBySNSApi_UserInfo&response_type=code&scope=snsapi_userinfo&state=%s#wechat_redirect", WeChatContant.APP_ID, WeChatContant.REQ_DOMAIN ,state);
+
+        response.sendRedirect(url);
+    }
+
+    private WxResponse refreshOauthToken(OauthToken item){
+        WxResponse wxResponse = new WxResponse();
+        String requestUrl = String.format("https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s", WeChatContant.APP_ID, item.getRefreshToken());
+        JSONObject jsonObject = WeChatUtil.httpsRequest(requestUrl, "GET", null);
+        if(jsonObject != null){
+            try {
+                OauthToken token = fillOauthTokenEntity(jsonObject);
+                weChatDaoImp.replaceOauthToken(token);
+                wxResponse.setOauthToken(token);
+            }catch (Exception e){
+                wxResponse.setWxError(fillWxErrorEntity(jsonObject));
+            }
+        }
+        return wxResponse;
+    }
     /*
     https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://ea8156c2.ngrok.io/wxServices/generatePersonalityPage&response_type=code&scope=snsapi_userinfo&state=activityId,register#wechat_redirect
     https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx573faabcfb33a8a0&secret=83f320c9694458ddf718451ae12f6b80&code=081Hezb50YWj0K1e12e50b5xb50Hezbt&grant_type=authorization_code
@@ -265,8 +352,113 @@ public class wxServices {
     获取第二步的refresh_token后，请求以下链接获取access_token：
     https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=APPID&grant_type=refresh_token&refresh_token=REFRESH_TOKEN
      */
-    private String getSNSUserInfoBySNSApi_UserInfo(){
-        return "";
+    @RequestMapping("/getSNSUserInfoBySNSApi_UserInfo")
+    public void getSNSUserInfoBySNSApi_UserInfo(HttpServletResponse response,
+                                                @RequestParam(value = "state") String state,
+                                                @RequestParam(value = "code") String snsapi_userinfo_code) throws SQLException, IOException {
+        String id = state.split(",")[0];
+        String requestMode = state.split(",")[1];
+        Activity activity = new Activity();
+        Activity_Register activityRegister = new Activity_Register();
+        if(requestMode.equals(WeChatContant.REQ_BIZ_REGISTER)) {
+            activity = weChatDaoImp.getActivityById(activityRegister.getActivityId());
+        }else if(requestMode.equals(WeChatContant.REQ_BIZ_PARTICIPATE)){
+            activityRegister = weChatDaoImp.getActivityRegisterById(id);
+            activity = weChatDaoImp.getActivityById(activityRegister.getActivityId());
+        }else{
+            response.sendRedirect("/activity/error.html?errcode=-1&errmsg=unknown request mode");
+            return ;
+        }
+
+        String requestUrl = String.format("https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code",
+                WeChatContant.APP_ID, WeChatContant.APP_SECRET, snsapi_userinfo_code);
+        JSONObject jsonObject = WeChatUtil.httpsRequest(requestUrl, "GET", null);
+        if(jsonObject != null){
+            try {
+                OauthToken token = fillOauthTokenEntity(jsonObject);
+                weChatDaoImp.replaceOauthToken(token);
+
+                WxResponse wxResponse = getSNSUserInfoByAccessToken(token.getAccessToken(), token.getOpenId());
+                if(wxResponse.getSnsUserInfo() != null){
+                    if(requestMode.equals(WeChatContant.REQ_BIZ_REGISTER)) {
+                        Activity_Register item = new Activity_Register();
+                        item.setId(UUID.randomUUID().toString());
+                        item.setActivityId(activity.getId());
+                        item.setRegisterId(wxResponse.getSnsUserInfo().getOpenId());
+                        item.setRegisterName(wxResponse.getSnsUserInfo().getNickName());
+                        item.setDate(CommonUtils.getCurrentDateTime());
+                        weChatDaoImp.insertActivityRegister(item);
+                        String participateUrl = String.format("%s?activityRegisterId=%s&nickName=%s",
+                                activity.getRegisterPage(), item.getId(), item.getRegisterName());
+                        response.sendRedirect(participateUrl);
+                    }
+                    else if(requestMode.equals(WeChatContant.REQ_BIZ_PARTICIPATE)){
+                        Activity_Participate item = new Activity_Participate();
+                        item.setId(UUID.randomUUID().toString());
+                        item.setActivityRegisterId(activityRegister.getId());
+                        item.setParticipateId(wxResponse.getSnsUserInfo().getOpenId());
+                        item.setParticipateName(wxResponse.getSnsUserInfo().getNickName());
+                        item.setDate(CommonUtils.getCurrentDateTime());
+                        weChatDaoImp.insertActivityParticipate(item);
+                        String participateUrl = String.format("%s?activityId=%s&nickName=%s",
+                                activity.getParticipatePage(), activity.getId(), item.getParticipateName());
+                        response.sendRedirect(participateUrl);
+                        return;
+                    }
+                }else{
+                    response.sendRedirect("/activity/error.html?errcode="+wxResponse.getWxError().getErrorCode()+"&errmsg="+wxResponse.getWxError().getErrorMessage());
+                }
+            }catch (Exception e){
+                WxError wxError = fillWxErrorEntity(jsonObject);
+                response.sendRedirect("/activity/error.html?errcode="+wxError.getErrorCode()+"&errmsg="+wxError.getErrorMessage());
+            }
+        }
+    }
+
+    private WxResponse getSNSUserInfoByAccessToken(String accessToken, String openId){
+        WxResponse wxResponse = new WxResponse();
+        String requestUrl = String.format("https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN", accessToken, openId);
+        JSONObject jsonObject = WeChatUtil.httpsRequest(requestUrl, "GET", null);
+        if(jsonObject != null){
+            try {
+                SNSUserInfo item = fillSNSUserInfoEntity(jsonObject);
+                weChatDaoImp.replaceSNSUserInfo(item);
+                wxResponse.setSnsUserInfo(item);
+            }catch (Exception e){
+                wxResponse.setWxError(fillWxErrorEntity(jsonObject));
+            }
+        }
+
+        return wxResponse;
+    }
+
+    private WxError fillWxErrorEntity(JSONObject jsonObject){
+        String errorCode = jsonObject.getString("errcode");
+        String errorMsg = jsonObject.getString("errmsg");
+        return new WxError(errorCode, errorMsg);
+    }
+
+    private OauthToken fillOauthTokenEntity(JSONObject jsonObject){
+        OauthToken token = new OauthToken();
+        token.setAccessToken(jsonObject.getString("access_token"));
+        token.setExpiresIn(jsonObject.getString("expires_in"));
+        token.setRefreshToken(jsonObject.getString("refresh_token"));
+        token.setOpenId(jsonObject.getString("openid"));
+        token.setScope(jsonObject.getString("scope"));
+        return token;
+    }
+
+    private SNSUserInfo fillSNSUserInfoEntity(JSONObject jsonObject){
+        SNSUserInfo item = new SNSUserInfo();
+        item.setOpenId(jsonObject.getString("openid"));
+        item.setNickName(jsonObject.getString("nickname"));
+        item.setSex(jsonObject.getString("sex"));
+        item.setProvince(jsonObject.getString("province"));
+        item.setCity(jsonObject.getString("city"));
+        item.setCountry(jsonObject.getString("country"));
+        item.setHeadImgUrl(jsonObject.getString("headimgurl"));
+        item.setPrivilegeList(jsonObject.getJSONArray("privilege"));
+        return item;
     }
     //endregion
 }

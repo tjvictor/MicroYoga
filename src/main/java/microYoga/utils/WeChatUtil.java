@@ -3,7 +3,7 @@ package microYoga.utils;
 import microYoga.model.wx.ArticleItem;
 import microYoga.model.wx.SNSUserInfo;
 import microYoga.model.wx.WeChatContant;
-import microYoga.model.wx.WeixinOauth2Token;
+import microYoga.model.wx.OauthToken;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -243,8 +243,8 @@ public class WeChatUtil {
      * @param code
      * @return WeixinAouth2Token
      */
-    public static WeixinOauth2Token getOauth2AccessToken(String appId, String appSecret, String code) {
-        WeixinOauth2Token wat = null;
+    public static OauthToken getOauth2AccessToken(String appId, String appSecret, String code) {
+        OauthToken wat = null;
         // 拼接请求地址
         String requestUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
         requestUrl = requestUrl.replace("APPID", appId);
@@ -254,9 +254,9 @@ public class WeChatUtil {
         JSONObject jsonObject = httpsRequest(requestUrl, "GET", null);
         if (null != jsonObject) {
             try {
-                wat = new WeixinOauth2Token();
+                wat = new OauthToken();
                 wat.setAccessToken(jsonObject.getString("access_token"));
-                wat.setExpiresIn(jsonObject.getInt("expires_in"));
+                wat.setExpiresIn(jsonObject.getString("expires_in"));
                 wat.setRefreshToken(jsonObject.getString("refresh_token"));
                 wat.setOpenId(jsonObject.getString("openid"));
                 wat.setScope(jsonObject.getString("scope"));

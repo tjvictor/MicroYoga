@@ -1,14 +1,14 @@
 package microYoga.model.wx;
 
 /**
- * 类名: WeixinOauth2Token </br>
+ * 类名: OauthToken </br>
  * 描述:  网页授权信息  </br>
  */
-public class WeixinOauth2Token {
+public class OauthToken {
     // 网页授权接口调用凭证
     private String accessToken;
     // 凭证有效时长
-    private int expiresIn;
+    private String expiresIn;
     // 用于刷新凭证
     private String refreshToken;
     // 用户标识
@@ -24,11 +24,11 @@ public class WeixinOauth2Token {
         this.accessToken = accessToken;
     }
 
-    public int getExpiresIn() {
+    public String getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(int expiresIn) {
+    public void setExpiresIn(String expiresIn) {
         this.expiresIn = expiresIn;
     }
 

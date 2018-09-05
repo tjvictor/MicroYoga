@@ -4,6 +4,7 @@ import microYoga.dao.WeChatDao;
 import microYoga.model.wx.Activity;
 import microYoga.model.wx.Activity_Participate;
 import microYoga.model.wx.Activity_Register;
+import microYoga.model.wx.OauthToken;
 import microYoga.model.wx.SNSUserInfo;
 
 import org.springframework.stereotype.Component;
@@ -74,7 +75,7 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
     @Override
     public Activity getActivityById(String id) throws SQLException {
         Activity item = new Activity();
-        String selectSql = String.format("select Id, Name, Date from Activity where id = '%s';", id);
+        String selectSql = String.format("select Id, Name, Date, PublishPage, RegisterPage, ParticipatePage from Activity where id = '%s';", id);
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
@@ -82,6 +83,9 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
                         int i = 1;
                         item.setId(rs.getString(i++));
                         item.setName(rs.getString(i++));
+                        item.setPublishPage(rs.getString(i++));
+                        item.setRegisterPage(rs.getString(i++));
+                        item.setParticipatePage(rs.getString(i++));
                         item.setDate(rs.getString(i++));
                     }
                 }
@@ -115,6 +119,54 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
         }
 
         return items;
+    }
+
+    @Override
+    public Activity_Register getActivityRegisterByActivityIdAndRegisterId(String activityId, String registerId) throws SQLException {
+        String selectSql = String.format("select Id, ActivityId, RegisterId, RegisterName, Date from Activity_Register where ActivityId = '%s' and RegisterId = '%s';", activityId, registerId);
+        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try(ResultSet rs = stmt.executeQuery(selectSql)) {
+                    while (rs.next()) {
+                        int i = 1;
+                        Activity_Register item = new Activity_Register();
+                        item.setId(rs.getString(i++));
+                        item.setActivityId(rs.getString(i++));
+                        item.setRegisterId(rs.getString(i++));
+                        item.setRegisterName(rs.getString(i++));
+                        item.setDate(rs.getString(i++));
+
+                        return item;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Activity_Register getActivityRegisterById(String id) throws SQLException {
+        String selectSql = String.format("select Id, ActivityId, RegisterId, RegisterName, Date from Activity_Register where Id = '%s';", id);
+        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try(ResultSet rs = stmt.executeQuery(selectSql)) {
+                    while (rs.next()) {
+                        int i = 1;
+                        Activity_Register item = new Activity_Register();
+                        item.setId(rs.getString(i++));
+                        item.setActivityId(rs.getString(i++));
+                        item.setRegisterId(rs.getString(i++));
+                        item.setRegisterName(rs.getString(i++));
+                        item.setDate(rs.getString(i++));
+
+                        return item;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -174,5 +226,62 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
         }
 
         return false;
+    }
+
+    @Override
+    public OauthToken getOauthTokenByOpenId(String openId) throws SQLException {
+        OauthToken item = new OauthToken();
+        String selectSql = String.format("SELECT OpenId, AccessToken, ExpiresIn, RefreshToken, Scope FROM OauthToken where OpenId = '%s';", openId);
+        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try(ResultSet rs = stmt.executeQuery(selectSql)) {
+                    if (rs.next()) {
+                        int i = 1;
+                        item.setOpenId(rs.getString(i++));
+                        item.setAccessToken(rs.getString(i++));
+                        item.setExpiresIn(rs.getString(i++));
+                        item.setRefreshToken(rs.getString(i++));
+                        item.setScope(rs.getString(i++));
+                    }
+                }
+            }
+        }
+
+        return item;
+    }
+
+    @Override
+    public void replaceOauthToken(OauthToken item) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)){
+            String replaceStr = "replace into OauthToken values(?,?,?,?,?);";
+            try(PreparedStatement ps = connection.prepareStatement(replaceStr)) {
+                int i = 1;
+                ps.setString(i++, item.getOpenId());
+                ps.setString(i++, item.getAccessToken());
+                ps.setString(i++, item.getExpiresIn());
+                ps.setString(i++, item.getRefreshToken());
+                ps.setString(i++, item.getScope());
+                ps.executeUpdate();
+            }
+        }
+    }
+
+    @Override
+    public void replaceSNSUserInfo(SNSUserInfo item) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)){
+            String replaceStr = "replace into SNSUserInfo values(?,?,?,?,?,?,?,?);";
+            try(PreparedStatement ps = connection.prepareStatement(replaceStr)) {
+                int i = 1;
+                ps.setString(i++, item.getOpenId());
+                ps.setString(i++, item.getNickName());
+                ps.setString(i++, item.getSex());
+                ps.setString(i++, item.getCountry());
+                ps.setString(i++, item.getProvince());
+                ps.setString(i++, item.getCity());
+                ps.setString(i++, item.getHeadImgUrl());
+                ps.setString(i++, item.getPrivilegeString());
+                ps.executeUpdate();
+            }
+        }
     }
 }
