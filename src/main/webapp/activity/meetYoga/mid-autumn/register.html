@@ -3,8 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="../../../res/jquery-weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../../res/js/mobile/mobile.js"></script>
+    <script>
+        $(function (){
+            var activityRegisterId = (window.location.search.substring(1).split('&')[0]).split('=')[1];
+            var niceName = decodeURI((window.location.search.substring(1).split('&')[1]).split('=')[1]);
+
+            $('#activityRegisterId').html(activityRegisterId);
+            $('#activityRegisterId').val(activityRegisterId);
+            $('#niceName').html(niceName);
+
+            $('a').attr('href', 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://6b32c7f4.ngrok.io/wxServices/generateParticipatePage&response_type=code&scope=snsapi_base&state='+activityRegisterId+',participate#wechat_redirect');
+
+            $('input').on('click', function(){
+                var param = "activityRegisterId="+$('#activityRegisterId').val();
+                callAjax('/wxServices/requestGenerateParticipatePage', '', '', '', '', param, '');
+            });
+        });
+    </script>
 </head>
 <body>
+    <div id="activityRegisterId" style="font-size:30px;"></div>
+    <div id="niceName" style="font-size:30px;"></div>
 
+    <input style="width:200px;height:100px;" type="button" value="ZAN">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <a href="" style="font-size:30px;">ZAN</a>
 </body>
 </html>

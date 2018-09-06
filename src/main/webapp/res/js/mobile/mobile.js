@@ -11,6 +11,7 @@ function callAjax(url, iTarget, iCallBack, iCallBackParam, iPost, iParams, iLoad
         async: async,
         type: aPost,
         url: url,
+        crossDomain: true,
         data: aParams,
         contentType: "application/x-www-form-urlencoded; charset=utf-8",
         success: function(data, textStatus, jqXHR) {

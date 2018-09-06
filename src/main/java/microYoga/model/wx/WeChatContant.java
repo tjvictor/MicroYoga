@@ -10,7 +10,7 @@ public class WeChatContant {
     public static final String TOKEN = "tjpower";
 
 
-    public static final String REQ_DOMAIN = "http://ea8156c2.ngrok.io";
+    public static final String REQ_DOMAIN = "http://6b32c7f4.ngrok.io";
     public static final String REQ_BIZ_REGISTER = "register";
     public static final String REQ_BIZ_PARTICIPATE = "participate";
 

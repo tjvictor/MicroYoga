@@ -3,8 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="../../../res/jquery-weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../../res/js/mobile/mobile.js"></script>
+    <script>
+        $(function(){
+            var activityId = (window.location.search.substring(1).split('&')[0]).split('=')[1];
+            var niceName = decodeURI((window.location.search.substring(1).split('&')[1]).split('=')[1]);
+            var duplicate = (window.location.search.substring(1).split('&')[2]).split('=')[1];
+
+            $('#activityId').html(activityId);
+            $('#activityId').val(activityId);
+            $('#niceName').html(niceName);
+            $('#duplicate').html(duplicate);
+
+            $('a').attr('href', 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://6b32c7f4.ngrok.io/wxServices/generateRegisterPage&response_type=code&scope=snsapi_base&state='+activityId+',register#wechat_redirect');
+
+        });
+    </script>
 </head>
 <body>
+    <div id="activityId" style="font-size:30px;"></div>
+    <div id="niceName" style="font-size:30px;"></div>
+    <div id="duplicate" style="font-size:30px;"></div>
 
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <a href="" style="font-size:30px;">点此生成您的专属页面</a>
 </body>
 </html>

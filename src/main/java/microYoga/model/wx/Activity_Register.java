@@ -1,11 +1,20 @@
 package microYoga.model.wx;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Activity_Register {
     private String id;
     private String activityId;
     private String registerId;
     private String registerName;
     private String Date;
+
+    private List<Activity_Participate> activity_participateList;
+
+    public Activity_Register(){
+        this.activity_participateList = new ArrayList<Activity_Participate>();
+    }
 
     public String getId() {
         return id;
@@ -45,5 +54,13 @@ public class Activity_Register {
 
     public void setDate(String date) {
         Date = date;
+    }
+
+    public List<Activity_Participate> getActivity_participateList() {
+        return activity_participateList;
+    }
+
+    public void setActivity_participateList(List<Activity_Participate> activity_participateList) {
+        this.activity_participateList = activity_participateList;
     }
 }

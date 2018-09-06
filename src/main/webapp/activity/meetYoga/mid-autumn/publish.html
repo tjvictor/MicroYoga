@@ -3,11 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>这是介绍页面</title>
+    <script src="../../../res/jquery-weui/lib/jquery-2.1.4.js"></script>
+    <script src="../../../res/js/mobile/mobile.js"></script>
+    <script>
+        $(function(){
+            $('input').on('click', function(){
+                var param = "activityId=1fdec647-fa3e-4541-86b4-da9bb9a911f9";
+                callAjax('/wxServices/requestGenerateRegisterPage', '', '', '', '', param, '');
+            });
+        });
+    </script>
 </head>
 <body>
     <div>sldfasldfjsakldfjasldfsad</div>
     <div>
-        <a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://ea8156c2.ngrok.io/wxServices/generateRegisterPage&response_type=code&scope=snsapi_base&state=1fdec647-fa3e-4541-86b4-da9bb9a911f9,register#wechat_redirect" style="width:100%;">点此生成您的专属页面</a>
+        <br>
+        <br>
+        <br>
+        <br>
+        <input type="button" style="width:200px;height:100px;" value="点此去服务器端生成专属页面">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://6b32c7f4.ngrok.io/wxServices/generateRegisterPage&response_type=code&scope=snsapi_base&state=1fdec647-fa3e-4541-86b4-da9bb9a911f9,register#wechat_redirect" style="width:100%;">点此生成您的专属页面</a>
     </div>
 </body>
 </html>

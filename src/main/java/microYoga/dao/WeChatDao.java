@@ -27,6 +27,8 @@ public interface WeChatDao {
 
     List<Activity_Participate> getActivityParticipatesByActivityRegisterId(String activityRegisterId) throws SQLException;
 
+    Activity_Participate getActivityParticipatesByActivityRegisterIdAndParticipateId(String activityRegisterId, String participateId) throws SQLException;
+
     boolean isRegisterExist(String activityId, String registerId) throws SQLException;
 
     boolean isParticipateExist(String activityRegisterId, String participateId) throws SQLException;

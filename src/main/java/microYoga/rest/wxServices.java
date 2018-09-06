@@ -1,6 +1,8 @@
 package microYoga.rest;
 
 import microYoga.dao.WeChatDao;
+import microYoga.model.Notification;
+import microYoga.model.ResponseObject;
 import microYoga.model.wx.Activity;
 import microYoga.model.wx.Activity_Participate;
 import microYoga.model.wx.Activity_Register;
@@ -195,6 +197,26 @@ public class wxServices {
     }
 
     //region Biz Logic
+    @RequestMapping("/requestGenerateRegisterPage")
+    public void requestGenerateRegisterPage(HttpServletResponse response,
+                                            @RequestParam(value = "activityId") String activityId) throws IOException {
+        String url = String.format("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s/wxServices/generateRegisterPage&response_type=code&scope=snsapi_base&state=%s,register#wechat_redirect",
+                WeChatContant.APP_ID, WeChatContant.REQ_DOMAIN, activityId);
+
+        response.sendRedirect(url);
+        return;
+    }
+    @RequestMapping("/requestGenerateParticipatePage")
+    public void requestGenerateParticipatePage(HttpServletResponse response,
+                                            @RequestParam(value = "activityRegisterId") String activityRegisterId) throws IOException {
+        String url = String.format("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s/wxServices/generateParticipatePage&response_type=code&scope=snsapi_base&state=%s,participate#wechat_redirect",
+                WeChatContant.APP_ID, WeChatContant.REQ_DOMAIN, activityRegisterId);
+
+        response.sendRedirect(url);
+        return;
+    }
+
+
     /*
     invoke below link in wechat client explorer, then wechat server will callback generatePersonalityPage function;
     https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://ea8156c2.ngrok.io/wxServices/generatePersonalityPage&response_type=code&scope=snsapi_base&state=activityId,register#wechat_redirect
@@ -214,10 +236,11 @@ public class wxServices {
         }
 
         Activity_Register activityRegister = weChatDaoImp.getActivityRegisterByActivityIdAndRegisterId(activityId, wxResponse.getOauthToken().getOpenId());
+
         if(activityRegister != null){
-            String participateUrl = String.format("%s?activityRegisterId=%s&nickName=%s",
-                    activity.getRegisterPage(), activityRegister.getId(), activityRegister.getRegisterName());
-            response.sendRedirect(participateUrl);
+            String registerUrl = String.format("%s?activityRegisterId=%s&nickName=%s",
+                    activity.getRegisterPage(), activityRegister.getId(), WeChatUtil.urlEncodeUTF8(activityRegister.getRegisterName()));
+            response.sendRedirect(registerUrl);
             return;
         }
 
@@ -249,7 +272,7 @@ public class wxServices {
                     wxResponse.getSnsUserInfo().getNickName(), CommonUtils.getCurrentDateTime());
             weChatDaoImp.insertActivityRegister(item);
             String participateUrl = String.format("%s?activityId=%s&nickName=%s",
-                    activity.getParticipatePage(), activity.getId(), item.getRegisterName());
+                    activity.getParticipatePage(), activity.getId(), WeChatUtil.urlEncodeUTF8(item.getRegisterName()));
             response.sendRedirect(participateUrl);
             return;
         }
@@ -268,6 +291,14 @@ public class wxServices {
             response.sendRedirect("/activity/error.html?errcode="+wxResponse.getWxError().getErrorCode()+"&errmsg="+wxResponse.getWxError().getErrorMessage());
             return;
         }
+
+        Activity_Participate activity_Participate = weChatDaoImp.getActivityParticipatesByActivityRegisterIdAndParticipateId(activityRegisterId, wxResponse.getOauthToken().getOpenId());
+        if(activity_Participate != null){
+            String participateUrl = String.format("%s?activityId=%s&nickName=%s&duplicate=1",
+                    activity.getParticipatePage(), activity.getId(), WeChatUtil.urlEncodeUTF8(activity_Participate.getParticipateName()));
+            response.sendRedirect(participateUrl);
+        }
+
 
         OauthToken token = weChatDaoImp.getOauthTokenByOpenId(wxResponse.getOauthToken().getOpenId());
         if(StringUtils.isEmpty(token.getAccessToken())){
@@ -295,8 +326,8 @@ public class wxServices {
                     activityRegisterId, wxResponse.getSnsUserInfo().getOpenId(),
                     wxResponse.getSnsUserInfo().getNickName(), CommonUtils.getCurrentDateTime());
             weChatDaoImp.insertActivityParticipate(item);
-            String participateUrl = String.format("%s?activityRegisterId=%s&nickName=%s",
-                    activity.getRegisterPage(), item.getId(), item.getParticipateName());
+            String participateUrl = String.format("%s?activityId=%s&nickName=%s&duplicate=0",
+                    activity.getRegisterPage(), activity.getId(), WeChatUtil.urlEncodeUTF8(item.getParticipateName()));
             response.sendRedirect(participateUrl);
             return;
         }
@@ -319,7 +350,8 @@ public class wxServices {
     }
 
     private void requestSNSApi_UserInfo_Code(HttpServletResponse response, String state) throws IOException {
-        String url = String.format("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s/wxServices/getSNSUserInfoBySNSApi_UserInfo&response_type=code&scope=snsapi_userinfo&state=%s#wechat_redirect", WeChatContant.APP_ID, WeChatContant.REQ_DOMAIN ,state);
+        String url = String.format("https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s/wxServices/getSNSUserInfoBySNSApi_UserInfo&response_type=code&scope=snsapi_userinfo&state=%s#wechat_redirect",
+                WeChatContant.APP_ID, WeChatContant.REQ_DOMAIN ,state);
 
         response.sendRedirect(url);
     }
@@ -356,7 +388,7 @@ public class wxServices {
         Activity activity = new Activity();
         Activity_Register activityRegister = new Activity_Register();
         if(requestMode.equals(WeChatContant.REQ_BIZ_REGISTER)) {
-            activity = weChatDaoImp.getActivityById(activityRegister.getActivityId());
+            activity = weChatDaoImp.getActivityById(id);
         }else if(requestMode.equals(WeChatContant.REQ_BIZ_PARTICIPATE)){
             activityRegister = weChatDaoImp.getActivityRegisterById(id);
             activity = weChatDaoImp.getActivityById(activityRegister.getActivityId());
@@ -381,7 +413,7 @@ public class wxServices {
                                 wxResponse.getSnsUserInfo().getNickName(), CommonUtils.getCurrentDateTime());
                         weChatDaoImp.insertActivityRegister(item);
                         String participateUrl = String.format("%s?activityRegisterId=%s&nickName=%s",
-                                activity.getRegisterPage(), item.getId(), item.getRegisterName());
+                                activity.getRegisterPage(), item.getId(), WeChatUtil.urlEncodeUTF8(item.getRegisterName()));
                         response.sendRedirect(participateUrl);
                         return;
                     }
@@ -390,8 +422,8 @@ public class wxServices {
                                 activityRegister.getId(), wxResponse.getSnsUserInfo().getOpenId(),
                                 wxResponse.getSnsUserInfo().getNickName(), CommonUtils.getCurrentDateTime());
                         weChatDaoImp.insertActivityParticipate(item);
-                        String participateUrl = String.format("%s?activityId=%s&nickName=%s",
-                                activity.getParticipatePage(), activity.getId(), item.getParticipateName());
+                        String participateUrl = String.format("%s?activityId=%s&nickName=%s&duplicate=0",
+                                activity.getParticipatePage(), activity.getId(), WeChatUtil.urlEncodeUTF8(item.getParticipateName()));
                         response.sendRedirect(participateUrl);
                         return;
                     }
@@ -473,6 +505,37 @@ public class wxServices {
         item.setParticipateName(participateName);
         item.setDate(date);
         return item;
+    }
+    //endregion
+
+    //Search Logic
+    @RequestMapping(value = "/getActivity_RegisterByActivityId", method = RequestMethod.GET)
+    public ResponseObject getActivity_RegisterByActivityId(@RequestParam(value = "activityId") String activityId){
+        try {
+            List<Activity_Register> items = weChatDaoImp.getActivityRegistersByActivityId(activityId);
+            return new ResponseObject("ok", "查询成功", items);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/getActivityDetailsById", method = RequestMethod.GET)
+    public ResponseObject getActivityDetailsById(@RequestParam(value = "id") String id){
+        try {
+            Activity activity = weChatDaoImp.getActivityById(id);
+            List<Activity_Register> items = weChatDaoImp.getActivityRegistersByActivityId(id);
+            for(Activity_Register item : items){
+                List<Activity_Participate> participates = weChatDaoImp.getActivityParticipatesByActivityRegisterId(item.getId());
+                item.setActivity_participateList(participates);
+            }
+            activity.setActivity_RegisterList(items);
+
+            return new ResponseObject("ok", "查询成功", activity);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
     }
     //endregion
 }

@@ -75,8 +75,8 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
     @Override
     public Activity getActivityById(String id) throws SQLException {
         Activity item = new Activity();
-        String selectSql = String.format("select Id, Name, Date, PublishPage, RegisterPage, ParticipatePage from Activity where id = '%s';", id);
-        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+        String selectSql = String.format("select Id, Name, PublishPage, RegisterPage, ParticipatePage, Date from Activity where id = '%s';", id);
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
                     if (rs.next()) {
@@ -100,7 +100,7 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
         List<Activity_Register> items = new ArrayList<Activity_Register>();
 
         String selectSql = String.format("select Id, ActivityId, RegisterId, RegisterName, Date from Activity_Register where ActivityId = '%s';", activityId);
-        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
                     while (rs.next()) {
@@ -124,7 +124,7 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
     @Override
     public Activity_Register getActivityRegisterByActivityIdAndRegisterId(String activityId, String registerId) throws SQLException {
         String selectSql = String.format("select Id, ActivityId, RegisterId, RegisterName, Date from Activity_Register where ActivityId = '%s' and RegisterId = '%s';", activityId, registerId);
-        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
                     while (rs.next()) {
@@ -148,7 +148,7 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
     @Override
     public Activity_Register getActivityRegisterById(String id) throws SQLException {
         String selectSql = String.format("select Id, ActivityId, RegisterId, RegisterName, Date from Activity_Register where Id = '%s';", id);
-        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
                     while (rs.next()) {
@@ -174,7 +174,7 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
         List<Activity_Participate> items = new ArrayList<Activity_Participate>();
 
         String selectSql = String.format("select Id, ActivityRegisterId, ParticipateId, ParticipateName, Weight, Date from Activity_Participate where ActivityRegisterId = '%s';", activityRegisterId);
-        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
                     while (rs.next()) {
@@ -197,9 +197,34 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
     }
 
     @Override
+    public Activity_Participate getActivityParticipatesByActivityRegisterIdAndParticipateId(String activityRegisterId, String participateId) throws SQLException {
+        String selectSql = String.format("select Id, ActivityRegisterId, ParticipateId, ParticipateName, Weight, Date from Activity_Participate where ActivityRegisterId = '%s' and ParticipateId = '%s';", activityRegisterId, participateId);
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try(ResultSet rs = stmt.executeQuery(selectSql)) {
+                    while (rs.next()) {
+                        int i = 1;
+                        Activity_Participate item = new Activity_Participate();
+                        item.setId(rs.getString(i++));
+                        item.setActivityRegisterId(rs.getString(i++));
+                        item.setParticipateId(rs.getString(i++));
+                        item.setParticipateName(rs.getString(i++));
+                        item.setWeight(rs.getString(i++));
+                        item.setDate(rs.getString(i++));
+
+                        return item;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public boolean isRegisterExist(String activityId, String registerId) throws SQLException {
         String selectSql = String.format("select count(0) from Activity_Register where ActivityId = '%s' and RegisterId = '%s';" ,activityId, registerId);
-        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
                     if (rs.next()) {
@@ -215,7 +240,7 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
     @Override
     public boolean isParticipateExist(String activityRegisterId, String participateId) throws SQLException {
         String selectSql = String.format("select count(0) from Activity_Participate where ActivityRegisterId = '%s' and ParticipateId = '%s';" ,activityRegisterId, participateId);
-        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
                     if (rs.next()) {
@@ -232,7 +257,7 @@ public class WeChatDaoImp extends BaseDao implements WeChatDao {
     public OauthToken getOauthTokenByOpenId(String openId) throws SQLException {
         OauthToken item = new OauthToken();
         String selectSql = String.format("SELECT OpenId, AccessToken, ExpiresIn, RefreshToken, Scope FROM OauthToken where OpenId = '%s';", openId);
-        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+        try (Connection connection = DriverManager.getConnection(dbActivityConnectString)) {
             try (Statement stmt = connection.createStatement()) {
                 try(ResultSet rs = stmt.executeQuery(selectSql)) {
                     if (rs.next()) {
