@@ -243,12 +243,10 @@ public class wxServices {
                 }
             }
 
-            Activity_Register item = new Activity_Register();
-            item.setId(UUID.randomUUID().toString());
-            item.setActivityId(activityId);
-            item.setRegisterId(wxResponse.getSnsUserInfo().getOpenId());
-            item.setRegisterName(wxResponse.getSnsUserInfo().getNickName());
-            item.setDate(CommonUtils.getCurrentDateTime());
+
+            Activity_Register item = fillActivity_Register(UUID.randomUUID().toString(),
+                    activityId, wxResponse.getSnsUserInfo().getOpenId(),
+                    wxResponse.getSnsUserInfo().getNickName(), CommonUtils.getCurrentDateTime());
             weChatDaoImp.insertActivityRegister(item);
             String participateUrl = String.format("%s?activityId=%s&nickName=%s",
                     activity.getParticipatePage(), activity.getId(), item.getRegisterName());
@@ -293,12 +291,9 @@ public class wxServices {
                 }
             }
 
-            Activity_Participate item = new Activity_Participate();
-            item.setId(UUID.randomUUID().toString());
-            item.setActivityRegisterId(activityRegisterId);
-            item.setParticipateId(wxResponse.getSnsUserInfo().getOpenId());
-            item.setParticipateName(wxResponse.getSnsUserInfo().getNickName());
-            item.setDate(CommonUtils.getCurrentDateTime());
+            Activity_Participate item = fillActivity_Participate(UUID.randomUUID().toString(),
+                    activityRegisterId, wxResponse.getSnsUserInfo().getOpenId(),
+                    wxResponse.getSnsUserInfo().getNickName(), CommonUtils.getCurrentDateTime());
             weChatDaoImp.insertActivityParticipate(item);
             String participateUrl = String.format("%s?activityRegisterId=%s&nickName=%s",
                     activity.getRegisterPage(), item.getId(), item.getParticipateName());
@@ -381,24 +376,19 @@ public class wxServices {
                 WxResponse wxResponse = getSNSUserInfoByAccessToken(token.getAccessToken(), token.getOpenId());
                 if(wxResponse.getSnsUserInfo() != null){
                     if(requestMode.equals(WeChatContant.REQ_BIZ_REGISTER)) {
-                        Activity_Register item = new Activity_Register();
-                        item.setId(UUID.randomUUID().toString());
-                        item.setActivityId(activity.getId());
-                        item.setRegisterId(wxResponse.getSnsUserInfo().getOpenId());
-                        item.setRegisterName(wxResponse.getSnsUserInfo().getNickName());
-                        item.setDate(CommonUtils.getCurrentDateTime());
+                        Activity_Register item = fillActivity_Register(UUID.randomUUID().toString(),
+                                activity.getId(), wxResponse.getSnsUserInfo().getOpenId(),
+                                wxResponse.getSnsUserInfo().getNickName(), CommonUtils.getCurrentDateTime());
                         weChatDaoImp.insertActivityRegister(item);
                         String participateUrl = String.format("%s?activityRegisterId=%s&nickName=%s",
                                 activity.getRegisterPage(), item.getId(), item.getRegisterName());
                         response.sendRedirect(participateUrl);
+                        return;
                     }
                     else if(requestMode.equals(WeChatContant.REQ_BIZ_PARTICIPATE)){
-                        Activity_Participate item = new Activity_Participate();
-                        item.setId(UUID.randomUUID().toString());
-                        item.setActivityRegisterId(activityRegister.getId());
-                        item.setParticipateId(wxResponse.getSnsUserInfo().getOpenId());
-                        item.setParticipateName(wxResponse.getSnsUserInfo().getNickName());
-                        item.setDate(CommonUtils.getCurrentDateTime());
+                        Activity_Participate item = fillActivity_Participate(UUID.randomUUID().toString(),
+                                activityRegister.getId(), wxResponse.getSnsUserInfo().getOpenId(),
+                                wxResponse.getSnsUserInfo().getNickName(), CommonUtils.getCurrentDateTime());
                         weChatDaoImp.insertActivityParticipate(item);
                         String participateUrl = String.format("%s?activityId=%s&nickName=%s",
                                 activity.getParticipatePage(), activity.getId(), item.getParticipateName());
@@ -458,6 +448,30 @@ public class wxServices {
         item.setCountry(jsonObject.getString("country"));
         item.setHeadImgUrl(jsonObject.getString("headimgurl"));
         item.setPrivilegeList(jsonObject.getJSONArray("privilege"));
+        return item;
+    }
+
+    private Activity_Register fillActivity_Register(String id, String activityId,
+                                                    String registerId,
+                                                    String registerName, String date){
+        Activity_Register item = new Activity_Register();
+        item.setId(id);
+        item.setActivityId(activityId);
+        item.setRegisterId(registerId);
+        item.setRegisterName(registerName);
+        item.setDate(date);
+        return item;
+    }
+
+    private  Activity_Participate fillActivity_Participate(String id, String activityRegisterId,
+                                                           String participateId,
+                                                           String participateName, String date){
+        Activity_Participate item = new Activity_Participate();
+        item.setId(id);
+        item.setActivityRegisterId(activityRegisterId);
+        item.setParticipateId(participateId);
+        item.setParticipateName(participateName);
+        item.setDate(date);
         return item;
     }
     //endregion
