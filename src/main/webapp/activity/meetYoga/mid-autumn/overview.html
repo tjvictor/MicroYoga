@@ -10,6 +10,42 @@
     <script src="../../../res/jquery-weui/lib/jquery-2.1.4.js"></script>
     <script src="../../../res/js/mobile/mobile.js"></script>
     <script>
+        $(function() {
+            var param = "id=1fdec647-fa3e-4541-86b4-da9bb9a911f9";
+            callAjax('/wxServices/getActivityDetailsById', '', 'getActivityDetailsByIdCallBack', '', '', param, '');
+        });
+        function getActivityDetailsByIdCallBack(data){
+            if(data.status == "ok"){
+                $('.content').html('');
+                var template = '';
+                var activity = data.callBackData;
+                var registers = activity.activity_RegisterList;
+                template += '<p style="background-color:white;">总共参与者 '+ registers.length +' 人</p><br>';
+                for(var reg = 0 ; reg < registers.length ; reg++){
+                    var register = registers[reg];
+                    var participates = register.activity_participateList;
+                    template += '<div style="width: 100%;background-color: white;height: 24px;line-height: 24px;margin: 10px 0 0 0" onclick="Accordion(this)">';
+                    template += '   <div class="left auto-clip" style="width:90%">微信昵称: ' + register.registerName + ' 总共 ' + participates.length + ' 人帮她/他砍价</div>';
+                    template += '   <div class="right" style="width:10%;height: 24px;">';
+                    template += '       <img src="../../../res/img/Arrow_Down.png">';
+                    template += '       <img src="../../../res/img/Arrow_Up.png" style="display:none;">';
+                    template += '   </div>';
+                    template += '   <div class="clear"></div>';
+                    template += '</div>';
+                    template += '<div style="display:none;background-color:wheat;padding: 10px;">';
+
+                    for(var part = 0 ; part < participates.length ; part++){
+                        var participate = participates[part];
+                        template += '<p style="padding:10px;">微信好友: ' + participate.participateName + ' 在 ' + participate.date + ' 砍价成功</p>';
+                    }
+
+                    template += '</div>';
+                }
+
+                $('.content').html(template);
+            }
+        }
+
         function Accordion(obj){
             $(obj).find("img").toggle();
             $(obj).next().toggle();
@@ -22,7 +58,7 @@
     <p>中秋砍价活动统计数据</p>
 </div>
 
-<div>
+<div class="content">
     <p style="background-color:white;">总共参与者xxxx人</p>
     <br>
     <div style="width: 100%;background-color: white;height: 24px;line-height: 24px;margin: 10px 0 0 0" onclick="Accordion(this)">
@@ -34,9 +70,9 @@
         <div class="clear"></div>
     </div>
     <div style="display:none;background-color:wheat;padding: 10px;">
-        <p>微信昵称: 好人 在 2018-09-25 砍价成功</p>
-        <p>微信昵称: 好人1 在 2018-09-27 砍价成功</p>
-        <p>微信昵称: 好人3 在 2018-09-27 砍价成功</p>
+        <p>微信好友: 好人 在 2018-09-25 砍价成功</p>
+        <p>微信好友: 好人1 在 2018-09-27 砍价成功</p>
+        <p>微信好友: 好人3 在 2018-09-27 砍价成功</p>
     </div>
 
     <div style="width: 100%;background-color: white;height: 24px;line-height: 24px;margin: 10px 0 0 0" onclick="Accordion(this)">
@@ -48,9 +84,9 @@
         <div class="clear"></div>
     </div>
     <div style="display:none;background-color:wheat;padding: 10px;">
-        <p>微信昵称: 好人1 在 2018-09-25 砍价成功</p>
-        <p>微信昵称: 好人11 在 2018-09-27 砍价成功</p>
-        <p>微信昵称: 好人31 在 2018-09-27 砍价成功</p>
+        <p>微信好友: 好人1 在 2018-09-25 砍价成功</p>
+        <p>微信好友: 好人11 在 2018-09-27 砍价成功</p>
+        <p>微信好友: 好人31 在 2018-09-27 砍价成功</p>
     </div>
 </div>
 </body>

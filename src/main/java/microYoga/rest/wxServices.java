@@ -1,7 +1,6 @@
 package microYoga.rest;
 
 import microYoga.dao.WeChatDao;
-import microYoga.model.Notification;
 import microYoga.model.ResponseObject;
 import microYoga.model.wx.Activity;
 import microYoga.model.wx.Activity_Participate;

@@ -8,7 +8,7 @@ public class Activity_Register {
     private String activityId;
     private String registerId;
     private String registerName;
-    private String Date;
+    private String date;
 
     private List<Activity_Participate> activity_participateList;
 
@@ -49,11 +49,11 @@ public class Activity_Register {
     }
 
     public String getDate() {
-        return Date;
+        return date;
     }
 
     public void setDate(String date) {
-        Date = date;
+        date = date;
     }
 
     public List<Activity_Participate> getActivity_participateList() {
