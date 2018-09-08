@@ -2,35 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="../../../res/jquery-weui/lib/jquery-2.1.4.js"></script>
-    <script src="../../../res/js/mobile/mobile.js"></script>
+    <title>遇见瑜伽---中秋砍价活动大酬宾</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <link rel="stylesheet" href="../../../res/css/mobile.css">
     <script>
-        $(function(){
+        window.onload=function(){
             var activityId = (window.location.search.substring(1).split('&')[0]).split('=')[1];
             var niceName = decodeURI((window.location.search.substring(1).split('&')[1]).split('=')[1]);
             var duplicate = (window.location.search.substring(1).split('&')[2]).split('=')[1];
 
-            $('#activityId').html(activityId);
-            $('#activityId').val(activityId);
-            $('#niceName').html(niceName);
-            $('#duplicate').html(duplicate);
+            document.getElementsByTagName('span')[0].innerText=niceName;
+            document.getElementsByTagName('span')[1].innerText=niceName;
+            if(duplicate === 1){
+                document.getElementById('first').style.display='none';
+                document.getElementById('multiple').style.display='block';
+            }
+            if(duplicate === 0){
+                document.getElementById('first').style.display='block';
+                document.getElementById('multiple').style.display='none';
+            }
 
-            $('a').attr('href', 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://6b32c7f4.ngrok.io/wxServices/generateRegisterPage&response_type=code&scope=snsapi_base&state='+activityId+',register#wechat_redirect');
-
-        });
+            document.getElementById('publish').setAttribute('href','https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://b4e1f5a5.ngrok.io/wxServices/generateRegisterPage&response_type=code&scope=snsapi_base&state='+activityId+',register#wechat_redirect');
+        };
     </script>
 </head>
-<body>
-    <div id="activityId" style="font-size:30px;"></div>
-    <div id="niceName" style="font-size:30px;"></div>
-    <div id="duplicate" style="font-size:30px;"></div>
-
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <a href="" style="font-size:30px;">点此生成您的专属页面</a>
+<body style="background-image:url('../../../res/img/bg.png')">
+    <div style="padding:20px;">
+        <p class="p-padding-top-10px" id="first" style="display:block">亲爱的 <span></span> ，感谢您为我砍价50元。</p>
+        <p class="p-padding-top-10px" id="multiple" style="display:none">亲爱的 <span></span> , 您已经为他/她砍过价了，谢谢您的参与。</p>
+        <br>
+        <p class="p-padding-top-10px">如果您已动心了，那还等什么，赶快加入我们吧。点击进入<a id="publish" style="font-size:20px;color:green">砍价页面</a>，让你的好友帮你一起砍价吧。</p>
+        <br>
+        <p class="p-padding-top-10px">遇见瑜伽也同样期待您的加入。点击<a href="/meetYoga.html" style="font-size:20px;color:blue">遇见瑜伽生活馆</a>，快来了解我们吧。</p>
+    </div>
 </body>
 </html>

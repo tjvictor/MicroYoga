@@ -2,37 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="../../../res/jquery-weui/lib/jquery-2.1.4.js"></script>
-    <script src="../../../res/js/mobile/mobile.js"></script>
-    <script>
-        $(function (){
-            var activityRegisterId = (window.location.search.substring(1).split('&')[0]).split('=')[1];
-            var niceName = decodeURI((window.location.search.substring(1).split('&')[1]).split('=')[1]);
-
-            $('#activityRegisterId').html(activityRegisterId);
-            $('#activityRegisterId').val(activityRegisterId);
-            $('#niceName').html(niceName);
-
-            $('a').attr('href', 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://6b32c7f4.ngrok.io/wxServices/generateParticipatePage&response_type=code&scope=snsapi_base&state='+activityRegisterId+',participate#wechat_redirect');
-
-            $('input').on('click', function(){
-                var param = "activityRegisterId="+$('#activityRegisterId').val();
-                callAjax('/wxServices/requestGenerateParticipatePage', '', '', '', '', param, '');
-            });
-        });
-    </script>
+    <title>遇见瑜伽---中秋砍价活动大酬宾</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <link rel="stylesheet" href="../../../res/css/mobile.css">
 </head>
-<body>
-    <div id="activityRegisterId" style="font-size:30px;"></div>
-    <div id="niceName" style="font-size:30px;"></div>
+<body style="background-image:url('../../../res/img/bg.png')">
+    <div style="padding:20px;">
+        <p class="" style="font-size: 24px;text-align:center;">遇见瑜伽</p>
+        <p class="" style="font-size: 24px;text-align:center;">中秋砍价活动大酬宾</p>
+        <p class="p-padding-top-10px"></p>
+        <p class="p-padding-top-10px">亲爱的伙伴们，我是<span id="nickName"></span>, 我正在参加遇见瑜伽的砍价活动，受累动动您的小手，帮我点击下面的“赞”，就可以成功帮我砍价50元。</p>
+        <p class="p-padding-top-10px"></p>
+        <br>
+        <div style="width:100%;height:40px;line-height:40px;background-color: green;text-align: center;" >
+            <a id="zan" href="" style="width:100%;color: white;font-size:24px">赞</a>
+        </div>
+        <br>
+        <p class="p-padding-top-10px">
+        <a href="/meetYoga.html">点此进入<font style="color:green;">遇见瑜伽生活馆</font>官方网站，在这里你会发现更多惊喜！</a>
+        </p>
+        <br>
+        <p class="p-padding-top-10px">
+            遇见瑜伽生活馆简介:
+        </p>
+        <p class="p-padding-top-10px">
+            请李卉同学自己添加吧。
+        </p>
+    </div>
 
-    <input style="width:200px;height:100px;" type="button" value="ZAN">
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <a href="" style="font-size:30px;">ZAN</a>
+    <script>
+        window.onload=function(){
+            var activityRegisterId = (window.location.search.substring(1).split('&')[0]).split('=')[1];
+            var nickName = decodeURI((window.location.search.substring(1).split('&')[1]).split('=')[1]);
+
+            document.getElementById('nickName').innerText=nickName;
+            document.getElementById('zan').setAttribute('href','https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://b4e1f5a5.ngrok.io/wxServices/generateParticipatePage&response_type=code&scope=snsapi_base&state='+activityRegisterId+',participate#wechat_redirect');
+        };
+    </script>
 </body>
 </html>

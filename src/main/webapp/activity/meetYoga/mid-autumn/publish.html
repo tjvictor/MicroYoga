@@ -2,17 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>这是介绍页面</title>
+    <title>遇见瑜伽---中秋砍价活动大酬宾</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
           content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <link rel="stylesheet" href="../../../res/css/mobile.css">
     <link rel="stylesheet" href="../../../res/css/animate.min.css">
     <style>
-        .p_padding_top_10px{
-            padding-top: 10px;
-        }
-
         @-webkit-keyframes rotation{
             from {-webkit-transform: rotate(0deg);}
             to {-webkit-transform: rotate(360deg);}
@@ -22,49 +18,66 @@
             -webkit-transform: rotate(360deg);
             animation: rotation 3s linear infinite;
         }
+
+
     </style>
     <script>
-        function play(){
+
+        function start(){
             var audio = document.getElementById('audio');
             audio.pause();
             document.getElementById('music_play').style.display='none';
             document.getElementById('music_pause').style.display='block';
         };
 
-        function pause(){
+        function stop(){
             var audio = document.getElementById('audio');
             audio.play();
+            audio.muted=false;
             document.getElementById('music_play').style.display='block';
             document.getElementById('music_pause').style.display='none';
         };
+
+
     </script>
 </head>
 <body style="background-image:url('../../../res/img/bg.png')">
-    <img id="music_play" src="../../../res/img/music_play.png" onclick="play()" class="Rotation" style="position:absolute;right:0;">
-    <img id="music_pause" src="../../../res/img/music_pause.png" onclick="pause()" style="display:none;position:absolute;right:0;">
-    <audio id="audio" autoplay="autoplay" loop="loop" src="song.ogg">
-    </audio>
-    <div style="padding:20px;">
-        <p class="animated fadeIn delay-2s" style="font-size: 24px;text-align:center;">遇见瑜伽</p>
-        <p class="animated fadeIn delay-2s" style="font-size: 24px;text-align:center;">中秋砍价活动大酬宾</p>
-        <p class="p_padding_top_10px"></p>
-        <p class="animated bounceInLeft delay-4s p_padding_top_10px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;你是不是还在为高额的瑜伽费用而烦恼，是不是还在为找不到合适的瑜伽教练而着急，那么还等什么，赶快加入我们这次的遇见瑜伽砍价活动吧。名额有限，先到先得！！！</p>
-        <p class="animated bounceInRight delay-10s p_padding_top_10px">活动规则:</p>
-        <p class="animated bounceInRight delay-10s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击下方按钮，生成您的专属砍价页面。分享专属页面到您的朋友圈或是微信好友，您的微信好友进入专属页面后，就可以帮您进行砍价了。第个好友限砍价一次，每次砍价50元。多多转发，多多砍价，多多优惠。原价999的中秋瑜伽套餐，看你能砍多少！！！</p>
-        <p class="animated bounceInRight delay-16s p_padding_top_10px">注意事项:</p>
-        <p class="animated bounceInRight delay-16s" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;活动截止日期为2018.10.01。活动名额限前20人参加，以到店办卡为准。无论最终砍价多少，办卡最低价为500元。本活动最终解释权归遇到瑜伽生活馆所有。参加此次活动代表默认同意并遵守上述规则！！！</p>
-        <p class="animated zoomIn delay-20s p_padding_top_10px">
-            <a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://6b32c7f4.ngrok.io/wxServices/generateRegisterPage&response_type=code&scope=snsapi_base&state=1fdec647-fa3e-4541-86b4-da9bb9a911f9,register#wechat_redirect" style="width:100%;height:30px;line-height:30px;background-color:green;color:white;">点此生成您的专属页面</a>
-        </p>
-        <p class="animated bounceInRight delay-22s p_padding_top_10px">
-            <a href="http://6b32c7f4.ngrok.io/meetYoga.html">点此进入<font style="color:green;">遇见瑜伽生活馆</font>官方网站，在这里你会发现更多惊喜！</a>
-        </p>
-        <p class="animated bounceInRight delay-22s p_padding_top_10px">
-            遇见瑜伽生活馆简介:
-        </p>
-        <p class="animated bounceInRight delay-22s p_padding_top_10px">
-            请李卉同学自己添加吧。
-        </p>
-    </div>
+<img id="music_play" src="../../../res/img/music_play.png" class="Rotation"
+     style="width:60px;height:60px;position:absolute;right:0px;z-index:1000;" onclick="start()">
+<img id="music_pause" src="../../../res/img/music_pause.png"
+     style="width:60px;height:60px;position:absolute;right:0px;display:none;z-index:1000;" onclick="stop()">
+<audio id="audio" autoplay="autoplay" loop="loop" muted="muted">
+    <source src="music.mp3" type="audio/mpeg">
+    Your browser does not support the audio tag.
+</audio>
+<div style="padding:20px;">
+    <p class="animated fadeIn delay-2s" style="font-size: 24px;text-align:center;">遇见瑜伽</p>
+    <p class="animated fadeIn delay-2s" style="font-size: 24px;text-align:center;">中秋砍价活动大酬宾</p>
+    <p class="p-padding-top-10px"></p>
+    <p class="animated bounceInLeft delay-4s p-padding-top-10px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;你是不是还在为高额的瑜伽费用而烦恼，是不是还在为找不到合适的瑜伽教练而着急，那么还等什么，赶快加入我们这次的遇见瑜伽砍价活动吧。名额有限，先到先得！！！</p>
+    <p class="animated bounceInRight delay-10s p-padding-top-10px">活动规则:</p>
+    <p class="animated bounceInRight delay-10s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击下方按钮，生成您的专属砍价页面。分享专属页面到您的朋友圈或是微信好友，您的微信好友进入专属页面后，就可以帮您进行砍价了。每个好友限砍价一次，每次砍价50元。多多转发，多多砍价，多多优惠。原价999的中秋瑜伽套餐，看你能砍多少！！！</p>
+    <p class="animated bounceInRight delay-16s p-padding-top-10px">注意事项:</p>
+    <p class="animated bounceInRight delay-16s">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;活动截止日期为2018.10.01。活动名额限前20人参加，以到店办卡为准。无论最终砍价多少，办卡最低价为500元。本活动最终解释权归遇到瑜伽生活馆所有。参加此次活动代表默认同意并遵守上述规则！！！</p>
+    <p class="animated rollIn delay-20s p-padding-top-10px">
+        <a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx573faabcfb33a8a0&redirect_uri=http://b4e1f5a5.ngrok.io/wxServices/generateRegisterPage&response_type=code&scope=snsapi_base&state=1fdec647-fa3e-4541-86b4-da9bb9a911f9,register#wechat_redirect"
+           style="width:100%;height:30px;line-height:30px;background-color:green;color:white;">点此生成您的专属页面</a>
+    </p>
+    <p class="animated fadeIn delay-22s p-padding-top-10px">
+        <a href="/meetYoga.html">点此进入<font style="color:green;">遇见瑜伽生活馆</font>官方网站，在这里你会发现更多惊喜！</a>
+    </p>
+    <p class="animated fadeIn delay-22s p-padding-top-10px">
+        遇见瑜伽生活馆简介:
+    </p>
+    <p class="animated fadeIn delay-22s p-padding-top-10px">
+        请李卉同学自己添加吧。
+    </p>
+</div>
+
+    <script>
+        window.onload=function(){
+            stop();
+        };
+    </script>
 </body>
 </html>
