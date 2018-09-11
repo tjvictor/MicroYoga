@@ -7,7 +7,17 @@ function getCoursesCallback(data){
         for (var i = 0; i < data.callBackData.length; i++) {
             var course = data.callBackData[i];
             template += '<a data-id="' + course.id + '" href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg yoga-open-popup">';
-            template += '   <div class="weui-media-box__hd"><img class="weui-media-box__thumb picture-radius-30px" src="' + course.avatar + '" alt=""></div>';
+
+            if(course.avatarCategory && course.avatarCategory !== ''){
+                template += '<div class="weui-media-box__hd">';
+                template += '   <div style="position:relative;width:100%;height:100%;">';
+                template += '       <img src="'+course.avatarCategory+'" style="position:absolute;bottom:0px;right:0px;width:24px;height:24px;border-radius:10px;">';
+                template += '       <img class="weui-media-box__thumb picture-radius-30px" src="' + course.avatar + '" alt="">';
+                template += '   </div>';
+                template += '</div>';
+            }else{
+                template += '<div class="weui-media-box__hd"><img class="weui-media-box__thumb picture-radius-30px" src="' + course.avatar + '" alt=""></div>';
+            }
             template += '   <div class="weui-media-box__bd">';
             template += '       <h4 class="weui-media-box__title">' + course.name + '</h4>';
             template += '       <p class="weui-media-box__desc">';

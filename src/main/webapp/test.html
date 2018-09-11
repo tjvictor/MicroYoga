@@ -17,11 +17,6 @@
     <script src="res/videojs710/video.js"></script>
     <link href="res/videojs710/video-js.css" rel="stylesheet">
     <script>
-        $(function () {
-            $('.weui-tabbar__item').on("click", function () {
-                $('.weui-tab__bd-item--content').load($(this).data("target"));
-            });
-        });
     </script>
     <style>
 
@@ -29,137 +24,14 @@
 </head>
 
 <body>
-
-<div class="weui-tab">
-    <div class="weui-tab__bd">
-        <div id="tabbar" class="weui-tab__bd-item ">
-            <div class="weui-tab__bd-item--content">
-
-                <div class="weui-tab">
-                    <div class="weui-navbar">
-                        <a href="#tab0" class="weui-navbar__item weui-bar__item--on"><p>09-02</p><p>周日</p></a>
-                        <a href="#tab1" class="weui-navbar__item"><p>08-27</p><p>周一</p></a>
-                        <a href="#tab2" class="weui-navbar__item"><p>08-28</p><p>周二</p></a>
-                        <a href="#tab3" class="weui-navbar__item"><p>08-29</p><p>周三</p></a>
-                        <a href="#tab4" class="weui-navbar__item"><p>08-30</p><p>周四</p></a>
-                        <a href="#tab5" class="weui-navbar__item"><p>08-31</p><p>周五</p></a>
-                        <a href="#tab6" class="weui-navbar__item"><p>09-01</p><p>周六</p></a>
-
-                    </div>
-                    <div class="weui-tab__bd" style="padding-top:80px;">
-                        <div id="tab0" class="weui-tab__bd-item weui-tab__bd-item--active">
-                            <div class="page__bd">
-                                <div class="weui-panel weui-panel_access">
-                                    <div class="weui-panel__bd">
-                                        <p style="padding:0.1rem;color:red;">今日无课程4</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab1" class="weui-tab__bd-item">
-                            <div class="page__bd">
-                                <div class="weui-panel weui-panel_access">
-                                    <div class="weui-panel__bd">
-                                        <p style="padding:0.1rem;color:red;">今日无课程5</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab2" class="weui-tab__bd-item">
-                            <div class="page__bd">
-                                <div class="weui-panel weui-panel_access">
-                                    <div class="weui-panel__bd">
-                                        <p style="padding:0.1rem;color:red;">今日无课程6</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab3" class="weui-tab__bd-item">
-                            <div class="page__bd">
-                                <div class="weui-panel weui-panel_access">
-                                    <div class="weui-panel__bd">
-                                        <p style="padding:0.1rem;color:red;">今日无课程11</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab4" class="weui-tab__bd-item">
-                            <div class="page__bd">
-                                <div class="weui-panel weui-panel_access">
-                                    <div class="weui-panel__bd">
-                                        <p style="padding:0.1rem;color:red;">今日无课程12</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab5" class="weui-tab__bd-item">
-                            <div class="page__bd">
-                                <div class="weui-panel weui-panel_access">
-                                    <div class="weui-panel__bd">
-                                        <p style="padding:0.1rem;color:red;">今日无课程13</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="tab6" class="weui-tab__bd-item">
-                            <div class="page__bd">
-                                <div class="weui-panel weui-panel_access">
-                                    <div class="weui-panel__bd">
-                                        <p style="padding:0.1rem;color:red;">今日无课程7</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-            <div style="margin-bottom:55px;"></div>
-        </div>
-        <div id="loginBar" class="weui-tab__bd-item weui-tab__bd-item--active">
-            <div class="weui-tab__bd-item--content">
-                    <img src="res/img/login-bg.jpg" class="yoga-login-bg-img">
-                    <input type="text" placeholder="请输入手机" class="yoga-login-username">
-                    <input type="password" placeholder="请输入密码" class="yoga-login-password">
-                    <a href="javascript:;" class="weui-btn weui-btn_primary yoga-login-button">开启美好一天</a>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Full Popup Container-->
-    <div id="full-popup-container" class='weui-popup__container' data-history="false">
-        <div class="weui-popup__overlay"></div>
-        <div class="weui-popup__modal">
-            <div class="yoga-popup-container-text"></div>
-
-            <a href="javascript:;" class="weui-btn weui-btn_primary close-popup">关闭</a>
-        </div>
-    </div>
-
-    <div class="weui-tabbar" style="height:50px;bottom:0px;position:fixed">
-        <a href="#tabbar" class="weui-tabbar__item weui-bar__item--on" data-target="mobileView/home.html">
-            <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 3em;">8</span>-->
-            <div class="weui-tabbar__icon">
-                <img src="res/jquery-weui/demos/images/icon_nav_button.png" alt="">
-            </div>
-            <p class="weui-tabbar__label">首页</p>
-        </a>
-        <a href="#tabbar" class="weui-tabbar__item" data-target="mobileView/order.html">
-            <div class="weui-tabbar__icon">
-                <img src="res/jquery-weui/demos/images/icon_nav_msg.png" alt="">
-            </div>
-            <p class="weui-tabbar__label">约课</p>
-        </a>
-        <a href="#tabbar" class="weui-tabbar__item" data-target="mobileView/personal.html">
-            <div class="weui-tabbar__icon">
-                <img src="res/jquery-weui/demos/images/icon_nav_article.png" alt="">
-            </div>
-            <p class="weui-tabbar__label">个人中心</p>
-        </a>
-    </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div style="position:relative;width:60px;height:60px;">
+    <img src="res/img/jing.png" style="position:absolute;bottom:0px;right:0px;width:24px;height:24px;border-radius:10px;">
+    <img src="res/img/teacher.png" style="width:100%;height:100%">
 </div>
 
 </body>

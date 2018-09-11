@@ -4,6 +4,7 @@ public class Course {
     private String id;
     private String name;
     private String avatar;
+    private String avatarCategory;
     private String introduction;
     private int rating;
 
@@ -29,6 +30,14 @@ public class Course {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getAvatarCategory() {
+        return avatarCategory;
+    }
+
+    public void setAvatarCategory(String avatarCategory) {
+        this.avatarCategory = avatarCategory;
     }
 
     public String getIntroduction() {

@@ -30,6 +30,7 @@ public class CourseDaoImp extends BaseDao implements CourseDao {
                         item.setId(rs.getString(i++));
                         item.setName(rs.getString(i++));
                         item.setAvatar(rs.getString(i++));
+                        item.setAvatarCategory(rs.getString(i++));
                         item.setIntroduction(rs.getString(i++));
                         item.setRating(rs.getInt(i++));
                         items.add(item);
@@ -54,6 +55,7 @@ public class CourseDaoImp extends BaseDao implements CourseDao {
                         item.setId(rs.getString(i++));
                         item.setName(rs.getString(i++));
                         item.setAvatar(rs.getString(i++));
+                        item.setAvatarCategory(rs.getString(i++));
                         item.setIntroduction(rs.getString(i++));
                         item.setRating(rs.getInt(i++));
                     }
@@ -67,12 +69,13 @@ public class CourseDaoImp extends BaseDao implements CourseDao {
     @Override
     public void insertCourse(Course course) throws SQLException {
         try (Connection connection = DriverManager.getConnection(dbConnectString)){
-            String insertSql = "insert into Course values(?,?,?,?,?)";
+            String insertSql = "insert into Course values(?,?,?,?,?,?)";
             try(PreparedStatement ps = connection.prepareStatement(insertSql)) {
                 int i = 1;
                 ps.setString(i++, course.getId());
                 ps.setString(i++, course.getName());
                 ps.setString(i++, course.getAvatar());
+                ps.setString(i++, course.getAvatarCategory());
                 ps.setString(i++, course.getIntroduction());
                 ps.setInt(i++, course.getRating());
                 ps.executeUpdate();
@@ -84,11 +87,12 @@ public class CourseDaoImp extends BaseDao implements CourseDao {
     @Override
     public void updateCourse(Course course) throws SQLException {
         try (Connection connection = DriverManager.getConnection(dbConnectString)){
-            String insertSql = "update Course set Name=?, Avatar=?, Introduction=?, Rating=? where id = ?";
+            String insertSql = "update Course set Name=?, Avatar=?, AvatarCategory=?, Introduction=?, Rating=? where id = ?";
             try(PreparedStatement ps = connection.prepareStatement(insertSql)) {
                 int i = 1;
                 ps.setString(i++, course.getName());
                 ps.setString(i++, course.getAvatar());
+                ps.setString(i++, course.getAvatarCategory());
                 ps.setString(i++, course.getIntroduction());
                 ps.setInt(i++, course.getRating());
                 ps.setString(i++, course.getId());
