@@ -58,6 +58,11 @@ public class CommonUtils {
         return calendar.getTime();
     }
 
+    public static Date getDateByString(String dateStr) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.parse(dateStr);
+    }
+
     public static String getWeekName(Date date){
         SimpleDateFormat dateFm = new SimpleDateFormat("EEE", Locale.ENGLISH);
         switch (dateFm.format(date).toLowerCase()){

@@ -184,6 +184,7 @@ public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
         selectSql += " join Course c on s.CourseId = c.Id ";
         selectSql += " join Teacher t on s.TeacherId = t.Id ";
         selectSql += String.format(" where substr(s.StartTime, 1, 10) = '%s'", dateStr);
+        selectSql += " order by s.StartTime asc;";
 
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
             try (Statement stmt = connection.createStatement()) {
