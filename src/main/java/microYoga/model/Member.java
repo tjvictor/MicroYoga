@@ -78,10 +78,19 @@ public class Member {
         this.password = password;
     }
 
+    public String getWeChat() {
+        return weChat;
+    }
+
+    public void setWeChat(String weChat) {
+        this.weChat = weChat;
+    }
+
     private String id;
     private String name;
     private String sex;
     private String tel;
+    private String weChat;
     private String password;
     private String joinDate;
     private String expireDate;

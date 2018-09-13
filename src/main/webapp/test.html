@@ -1,39 +1,248 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>jQuery WeUI</title>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"
-    />
+    <meta name="viewport"
+          content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <link rel="stylesheet" href="res/jquery-weui/lib/weui.min.css">
     <link rel="stylesheet" href="res/jquery-weui/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="res/js/mobile/MyPlugins/pagination/jquery.myPagination.css">
     <link rel="stylesheet" href="res/css/mobile.css">
+    <link rel="stylesheet" href="res/videojs710/video-js.min.css">
     <script src="res/jquery-weui/lib/jquery-2.1.4.min.js"></script>
-    <script src="res/jquery-weui/js/jquery-weui.min.js"></script>
+    <script src="res/jquery-weui/js/jquery-weui.min.js?v=1.0"></script>
     <script src="res/jquery-weui/js/swiper.min.js"></script>
-    <script src="res/js/jquery.cookie.js"></script>
+    <script src="res/js/js.cookie.js"></script>
+    <script src="res/js/mobile/mobile.js"></script>
+    <script src="res/js/mobile/photo.js"></script>
+    <script src="res/js/mobile/teacher.js"></script>
+    <script src="res/js/mobile/course.js"></script>
+    <script src="res/js/mobile/video.js"></script>
+    <script src="res/js/mobile/notification.js"></script>
+    <script src="res/js/mobile/news.js"></script>
+    <script src="res/js/mobile/MyPlugins/pagination/jquery.myPagination.js"></script>
     <script src="res/videojs710/video.min.js"></script>
-    <link href="res/videojs710/video-js.min.css" rel="stylesheet">
     <script>
-    </script>
-    <style>
+        $(function (){
+            $('.weui-cell_swiped').swipeout();
+            $("#join").calendar({dateFormat: 'yyyy-mm-dd'});
+            $("#expire").calendar({dateFormat: 'yyyy-mm-dd'});
 
-    </style>
+            $('.yoga-open-popup').on('click', function (){
+                $('.add_member_btn').css('display', 'none');
+                $('#full-popup-container').popup();
+            });
+
+            $('.add_member_btn').on('click', function (){
+                var name = $.trim($('#name').val());
+                var password = $.trim($('#password').val());
+                var sex = $.trim($('#sex').val());
+                var tel = $.trim($('#tel').val());
+                var weChat = $.trim($('#weChat').val());
+                var join = $.trim($('#join').val());
+                var expire = $.trim($('#expire').val());
+                var fee = $.trim($('#fee').val());
+                var remark = $.trim($('#remark').val());
+
+                if(name === '' || password === '' || tel === ''){
+                    $.alert("姓名，密码，电话不能为空!", "警告！");
+                    return;
+                }
+
+                var postValue = {
+                    "id": id,
+                    "name": name,
+                    "sex": sex,
+                    "tel": tel,
+                    "pwd": pwd,
+                    "weChat": weChat,
+                    "joinDate": join,
+                    "expireDate": expire,
+                    "fee": fee,
+                    "remark": remark
+                };
+
+                callAjax('/websiteService/addMember', '', 'addMemberCallback', '', 'POST', postValue, '');
+            });
+
+            callAjax('/websiteService/getMembers', '', 'getMembersCallback', '', '', '', '');
+        });
+
+        function getMembersCallback(data){
+            if(data.status == "ok"){
+                var template = '';
+                var members = data.callBackData;
+                for(var i = 0 ; i < members.length ; i++){
+                    var member = members[i];
+                    template += '<div class="weui-cell weui-cell_swiped">';
+                    template += '   <div data-id="' + member.id + '" class="weui-cell__bd yoga-open-popup">';
+                    template += '       <div class="weui-cell">';
+                    template += '           <div class="weui-cell__bd">';
+                    template += '               <p>'+ member.name + ' ' + item.tel +'</p>';
+                    template += '           </div>';
+                    template += '       </div>';
+                    template += '   </div>';
+                    template += '   <div class="weui-cell__ft">';
+                    template += '       <a id="' + member.id + '" onclick="deleteMember(this);" class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout" href="javascript:">删除</a>';
+                    template += '   </div>';
+                    template += '</div>';
+
+                    $('.memberView').data(member.id, member);
+                }
+            }
+        }
+
+        function addMemberCallback(data){
+            if(data.status == "ok"){
+
+            }
+        }
+
+        function deleteMember(obj){
+            var id = $(obj).attr('id');
+            $.confirm("您确定要删除吗?", "确认删除?",
+                function() {
+                    callAjax('/websiteService/deleteMember', '', 'deleteMemberCallback', '', '', 'id='+id, '');
+                },
+                function() {
+                    $(obj).parents('.weui-cell').swipeout('close');
+                });
+        }
+        function deleteMemberCallback(data){
+            if(data.status == "ok"){
+                $('#'+data.callBackData).parents('.weui-cell').remove();
+            }
+        }
+
+        function openNewDialog(){
+            $('.weui-input').each(function () { $(this).val(''); });
+            $('.weui-textarea').val('');
+            $('.add_member_btn').css('display', 'block');
+            $('#full-popup-container').popup();
+        }
+
+
+
+    </script>
+
 </head>
 
 <body>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div style="position:relative;width:60px;height:60px;">
-    <img src="res/img/jing.png" style="position:absolute;bottom:0px;right:0px;width:24px;height:24px;border-radius:10px;">
-    <img src="res/img/teacher.png" style="width:100%;height:100%">
+<div class="bd">
+    <div class="page__bd">
+        <div class="weui-cells memberView">
+            <div class="weui-cell weui-cell_swiped">
+                <div class="weui-cell__bd">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <p>向左滑动来新增或是删除会员</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell__ft">
+                    <a onclick="openNewDialog()" class="weui-swiped-btn weui-swiped-btn_warn" href="javascript:">新增</a>
+                </div>
+            </div>
+            <div class="weui-cell weui-cell_swiped">
+                <div class="weui-cell__bd yoga-open-popup">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <p>渣打银行 15266597854</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell__ft">
+                    <a id="dd" onclick="deleteMember('dd');" class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout"
+                       href="javascript:">删除</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<div id="full-popup-container" class='weui-popup__container' data-history="false">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="weui-cells">
+            <div style="padding:20px;">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        姓名
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="name" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        密码
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="password" value="555555555" class="weui-input" type="number" pattern="[0-9]*" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        性别
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="sex" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        手机
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="tel" class="weui-input" type="number" pattern="[0-9]*" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        微信
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="weChat" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        注册
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="join" class="weui-input" type="text" readonly="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        到期
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="expire" class="weui-input" type="text" readonly="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        费用
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="fee" class="weui-input" type="number" pattern="[0-9]*" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cells weui-cells_form">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <textarea id="remark" class="weui-textarea" placeholder="备注" rows="3">asdfasdfasd</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="javascript:;" class="weui-btn weui-btn_primary add_member_btn" style="display:none">新增</a>
+        <a href="javascript:;" class="weui-btn weui-btn_warn close-popup">关闭</a>
+    </div>
+</div>
 </body>
-
 </html>

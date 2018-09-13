@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MemberDao {
 
-    void insertMember(Member member) throws SQLException;
+    void addMember(Member member) throws SQLException;
 
     void updateMember(Member member) throws SQLException;
 
@@ -17,7 +17,7 @@ public interface MemberDao {
 
     boolean isMobileDuplicated(String id, String tel) throws SQLException;
 
-    List<Member> getMembers(String name, String tel) throws SQLException;
+    List<Member> getMembers() throws SQLException;
 
     void deleteMember(String id) throws SQLException;
 

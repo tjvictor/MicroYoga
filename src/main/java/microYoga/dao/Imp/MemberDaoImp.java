@@ -3,7 +3,6 @@ package microYoga.dao.Imp;
 import microYoga.dao.MemberDao;
 import microYoga.model.Member;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -21,9 +20,9 @@ public class MemberDaoImp extends BaseDao implements MemberDao {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public void insertMember(Member member) throws SQLException {
+    public void addMember(Member member) throws SQLException {
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
-            String insertSql = "insert into Member values(?,?,?,?,?,?,?,?,?)";
+            String insertSql = "insert into Member values(?,?,?,?,?,?,?,?,?,?)";
             try (PreparedStatement ps = connection.prepareStatement(insertSql)) {
                 int i = 1;
                 ps.setString(i++, member.getId());
@@ -31,6 +30,7 @@ public class MemberDaoImp extends BaseDao implements MemberDao {
                 ps.setString(i++, member.getSex());
                 ps.setString(i++, member.getTel());
                 ps.setString(i++, member.getPassword());
+                ps.setString(i++, member.getWeChat());
                 ps.setString(i++, member.getJoinDate());
                 ps.setString(i++, member.getExpireDate());
                 ps.setInt(i++, member.getFee());
@@ -106,13 +106,9 @@ public class MemberDaoImp extends BaseDao implements MemberDao {
     }
 
     @Override
-    public List<Member> getMembers(String name, String tel) throws SQLException {
+    public List<Member> getMembers() throws SQLException {
         List<Member> items = new ArrayList<Member>();
-        String selectSql = String.format("select * from Member  where IsDel = 0 ");
-        if (StringUtils.isNotEmpty(name))
-            selectSql += String.format(" and Name = '%s'", name);
-        if (StringUtils.isNotEmpty(tel))
-            selectSql += String.format(" and Tel = '%s'", tel);
+        String selectSql = String.format("select * from Member;");
 
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
             try (Statement stmt = connection.createStatement()) {
@@ -125,6 +121,7 @@ public class MemberDaoImp extends BaseDao implements MemberDao {
                         item.setSex(rs.getString(i++));
                         item.setTel(rs.getString(i++));
                         item.setPassword(rs.getString(i++));
+                        item.setWeChat(rs.getString(i++));
                         item.setJoinDate(rs.getString(i++));
                         item.setExpireDate(rs.getString(i++));
                         item.setFee(rs.getInt(i++));

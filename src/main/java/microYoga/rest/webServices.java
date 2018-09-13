@@ -413,6 +413,63 @@ public class webServices {
             return new ResponseObject("error", "系统错误，请联系系统管理员");
         }
     }
+
+    @RequestMapping(value = "/getMembers", method = RequestMethod.GET)
+    public ResponseObject getMembers() {
+        try {
+            List<Member> members = memberDaoImp.getMembers();
+            return new ResponseObject("ok", "查询成功", members);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/addMember", method = RequestMethod.POST)
+    public ResponseObject addMember(@FormParam("name") String name, @FormParam("sex") String sex, @FormParam("tel") String tel, @FormParam("weChat") String weChat,
+                                       @FormParam("pwd") String pwd, @FormParam("joinDate") String joinDate, @FormParam("expireDate") String expireDate,
+                                       @FormParam("fee") int fee, @FormParam("remark") String remark) {
+
+        try {
+            if (memberDaoImp.isMobileExisted(tel)) {
+                return new ResponseObject("error", "此用户的手机号已经注册过了");
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+
+        Member item = new Member();
+        item.setId(UUID.randomUUID().toString());
+        item.setName(name);
+        item.setSex(sex);
+        item.setTel(tel);
+        item.setWeChat(weChat);
+        item.setPassword(pwd);
+        item.setJoinDate(joinDate);
+        item.setExpireDate(expireDate);
+        item.setFee(fee);
+        item.setRemark(remark);
+
+        try {
+            memberDaoImp.addMember(item);
+            return new ResponseObject("ok", "插入成功", item);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/deleteMember", method = RequestMethod.GET)
+    public ResponseObject deleteMembers(@RequestParam("id") String id) {
+        try {
+            memberDaoImp.deleteMember(id);
+            return new ResponseObject("ok", "删除成功", id);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
     //endregion
 
     //region notification
