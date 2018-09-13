@@ -26,18 +26,12 @@
     <script src="res/videojs710/video.min.js"></script>
     <script>
         $(function (){
-            $('.weui-cell_swiped').swipeout();
             $("#join").calendar({dateFormat: 'yyyy-mm-dd'});
             $("#expire").calendar({dateFormat: 'yyyy-mm-dd'});
 
-            $('.yoga-open-popup').on('click', function (){
-                $('.add_member_btn').css('display', 'none');
-                $('#full-popup-container').popup();
-            });
-
             $('.add_member_btn').on('click', function (){
                 var name = $.trim($('#name').val());
-                var password = $.trim($('#password').val());
+                var pwd = $.trim($('#password').val());
                 var sex = $.trim($('#sex').val());
                 var tel = $.trim($('#tel').val());
                 var weChat = $.trim($('#weChat').val());
@@ -52,7 +46,6 @@
                 }
 
                 var postValue = {
-                    "id": id,
                     "name": name,
                     "sex": sex,
                     "tel": tel,
@@ -72,6 +65,7 @@
 
         function getMembersCallback(data){
             if(data.status == "ok"){
+                $('.memberView').removeData();
                 var template = '';
                 var members = data.callBackData;
                 for(var i = 0 ; i < members.length ; i++){
@@ -80,7 +74,7 @@
                     template += '   <div data-id="' + member.id + '" class="weui-cell__bd yoga-open-popup">';
                     template += '       <div class="weui-cell">';
                     template += '           <div class="weui-cell__bd">';
-                    template += '               <p>'+ member.name + ' ' + item.tel +'</p>';
+                    template += '               <p>'+ member.name + ' ' + member.tel +'</p>';
                     template += '           </div>';
                     template += '       </div>';
                     template += '   </div>';
@@ -91,6 +85,26 @@
 
                     $('.memberView').data(member.id, member);
                 }
+
+                $('.memberView').html(template);
+                $('.weui-cell_swiped').swipeout();
+                $('.yoga-open-popup').on('click', function (){
+                    $('.add_member_btn').css('display', 'none');
+                    var id = $(this).data('id');
+                    var data = $('.memberView').data(id);
+
+                    $('#name').val(data.name);
+                    $('#password').val(data.password);
+                    $('#sex').val(data.sex);
+                    $('#tel').val(data.tel);
+                    $('#weChat').val(data.weChat);
+                    $('#join').val(data.joinDate);
+                    $('#expire').val(data.expireDate);
+                    $('#fee').val(data.fee);
+                    $('#remark').val(data.remark);
+
+                    $('#full-popup-container').popup();
+                });
             }
         }
 
@@ -107,6 +121,7 @@
                     callAjax('/websiteService/deleteMember', '', 'deleteMemberCallback', '', '', 'id='+id, '');
                 },
                 function() {
+                    $('.memberView').removeData(id);
                     $(obj).parents('.weui-cell').swipeout('close');
                 });
         }
@@ -132,7 +147,7 @@
 <body>
 <div class="bd">
     <div class="page__bd">
-        <div class="weui-cells memberView">
+        <div class="weui-cells">
             <div class="weui-cell weui-cell_swiped">
                 <div class="weui-cell__bd">
                     <div class="weui-cell">
@@ -145,17 +160,19 @@
                     <a onclick="openNewDialog()" class="weui-swiped-btn weui-swiped-btn_warn" href="javascript:">新增</a>
                 </div>
             </div>
-            <div class="weui-cell weui-cell_swiped">
-                <div class="weui-cell__bd yoga-open-popup">
-                    <div class="weui-cell">
-                        <div class="weui-cell__bd">
-                            <p>渣打银行 15266597854</p>
+            <div class="memberView">
+                <div class="weui-cell weui-cell_swiped">
+                    <div class="weui-cell__bd yoga-open-popup">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <p>渣打银行 15266597854</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="weui-cell__ft">
-                    <a id="dd" onclick="deleteMember('dd');" class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout"
-                       href="javascript:">删除</a>
+                    <div class="weui-cell__ft">
+                        <a id="dd" onclick="deleteMember('dd');" class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout"
+                           href="javascript:">删除</a>
+                    </div>
                 </div>
             </div>
         </div>
