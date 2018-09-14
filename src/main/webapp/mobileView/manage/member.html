@@ -1,12 +1,14 @@
 <script>
-    $(function (){
-        $('.weui-cell_swiped').swipeout();
+    $(function() {
+        memberInit();
     });
 </script>
+
 <div class="bd">
     <div class="page__bd">
+        <div class="weui-cells__title">遇见瑜伽生活馆---会员管理页面</div>
         <div class="weui-cells">
-            <div class="weui-cell weui-cell_swiped">
+            <div class="weui-cell weui-cell_swiped" id="add_swiped">
                 <div class="weui-cell__bd">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
@@ -15,22 +17,95 @@
                     </div>
                 </div>
                 <div class="weui-cell__ft">
-                    <a class="weui-swiped-btn weui-swiped-btn_warn" href="javascript:">新增</a>
+                    <a class="weui-swiped-btn weui-swiped-btn_warn open_member_new_dialog" href="javascript:">新增</a>
                 </div>
             </div>
-            <div class="weui-cell weui-cell_swiped">
-                <div class="weui-cell__bd">
-                    <div class="weui-cell">
-                        <div class="weui-cell__bd">
-                            <p>左滑列表</p>
-                        </div>
-                        <div class="weui-cell__ft">向左滑动试试</div>
+            <div class="memberView" style="border-top: 1px solid #e5e5e5;">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="full-popup-container" class='weui-popup__container' data-history="false">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="weui-cells">
+            <div style="padding:20px;">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        姓名
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="name" class="weui-input" type="text" placeholder="">
                     </div>
                 </div>
-                <div class="weui-cell__ft">
-                    <a class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout" href="javascript:">删除</a>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        密码
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="password" value="555555555" class="weui-input" type="number" pattern="[0-9]*" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        性别
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="sex" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        手机
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="tel" class="weui-input" type="number" pattern="[0-9]*" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        微信
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="weChat" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        注册
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="join" class="weui-input" type="text" readonly="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        到期
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="expire" class="weui-input" type="text" readonly="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        费用
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="fee" class="weui-input" type="number" pattern="[0-9]*" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cells weui-cells_form">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <textarea id="remark" class="weui-textarea" placeholder="备注" rows="3"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <a href="javascript:;" class="weui-btn weui-btn_primary add_member_btn" style="display:none">新增</a>
+        <a href="javascript:;" class="weui-btn weui-btn_warn close-popup">关闭</a>
     </div>
 </div>

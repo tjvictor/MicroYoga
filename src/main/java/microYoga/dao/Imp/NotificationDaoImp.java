@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -99,7 +98,7 @@ public class NotificationDaoImp extends BaseDao implements NotificationDao {
                 ps.setString(i++, item.getId());
                 ps.setString(i++, item.getTitle());
                 ps.setString(i++, item.getContent());
-                ps.setString(i++, df.format(new Date()));
+                ps.setString(i++, item.getDate());
                 ps.executeUpdate();
             }
         }

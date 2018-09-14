@@ -18,6 +18,7 @@ import microYoga.model.Order;
 import microYoga.model.Photo;
 import microYoga.model.PhotoWall;
 import microYoga.model.ResponseObject;
+import microYoga.model.Schedule;
 import microYoga.model.ScheduleWeek;
 import microYoga.model.Teacher;
 import microYoga.model.Video;
@@ -496,6 +497,46 @@ public class webServices {
             return new ResponseObject("error", "系统错误，请联系系统管理员");
         }
     }
+
+    @RequestMapping(value = "/getNotifications", method = RequestMethod.GET)
+    public ResponseObject getNotifications() {
+        try {
+            List<Notification> notifications = notificationDaoImp.getNotifications();
+            return new ResponseObject("ok", "查询成功", notifications);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/addNotification", method = RequestMethod.POST)
+    public ResponseObject addNotification(@FormParam("title") String title, @FormParam("content") String content) {
+
+        Notification item = new Notification();
+        item.setId(UUID.randomUUID().toString());
+        item.setTitle(title);
+        item.setContent(content);
+        item.setDate(CommonUtils.getCurrentDate());
+
+        try {
+            notificationDaoImp.insertNotification(item);
+            return new ResponseObject("ok", "插入成功", item);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/deleteNotification", method = RequestMethod.GET)
+    public ResponseObject deleteNotifications(@RequestParam("id") String id) {
+        try {
+            notificationDaoImp.deleteNotification(id);
+            return new ResponseObject("ok", "删除成功", id);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
     //endregion
 
     //region News
@@ -518,6 +559,63 @@ public class webServices {
             News item = newsDaoImp.getNewsById(id);
             return new ResponseObject("ok", "查询成功", item);
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+    //endregion
+
+    //region Schedule
+    @RequestMapping(value = "/getSchedules", method = RequestMethod.GET)
+    public ResponseObject getSchedules() {
+        try {
+            List<Schedule> schedules = scheduleDaoImp.getSchedules();
+            return new ResponseObject("ok", "查询成功", schedules);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/getFullScheduleByDate", method = RequestMethod.GET)
+    public ResponseObject getFullScheduleByDate(@RequestParam("date") String date) {
+        try {
+            List<Schedule> schedules = scheduleDaoImp.getFullScheduleByDate(date);
+            return new ResponseObject("ok", "查询成功", schedules);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/addSchedule", method = RequestMethod.POST)
+    public ResponseObject addSchedule(@FormParam("teacherId") String teacherId, @FormParam("courseId") String courseId,
+                                      @FormParam("startTime") String startTime, @FormParam("endTime") String endTime,
+                                      @FormParam("capacity") int capacity) {
+
+        Schedule item = new Schedule();
+        item.setId(UUID.randomUUID().toString());
+        item.setTeacherId(teacherId);
+        item.setCourseId(courseId);
+        item.setStartDateTime(startTime);
+        item.setEndDateTime(endTime);
+        item.setCapacity(capacity);
+
+        try {
+            scheduleDaoImp.insertSchedule(item);
+            return new ResponseObject("ok", "插入成功", item);
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseObject("error", "系统错误，请联系系统管理员");
+        }
+    }
+
+    @RequestMapping(value = "/deleteSchedule", method = RequestMethod.GET)
+    public ResponseObject deleteSchedules(@RequestParam("id") String id) {
+        try {
+            scheduleDaoImp.deleteSchedule(id);
+            return new ResponseObject("ok", "删除成功", id);
+        } catch (SQLException e) {
             logger.error(e.getMessage(), e);
             return new ResponseObject("error", "系统错误，请联系系统管理员");
         }

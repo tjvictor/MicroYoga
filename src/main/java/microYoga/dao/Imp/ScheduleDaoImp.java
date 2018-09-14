@@ -1,10 +1,12 @@
 package microYoga.dao.Imp;
 
+import microYoga.dao.OrderDao;
 import microYoga.dao.ScheduleDao;
 import microYoga.model.Schedule;
 import microYoga.model.ScheduleExt;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,6 +23,9 @@ import java.util.List;
 
 @Component
 public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
+
+    @Autowired
+    private OrderDao orderDaoImp;
 
     @Override
     public List<Schedule> getSchedules() throws SQLException {
@@ -97,6 +102,41 @@ public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
                         item.setCourseName(rs.getString(i++));
                         item.setCourseRating(rs.getInt(i++));
                         item.setCourseAvatar(rs.getString(i++));
+                        items.add(item);
+                    }
+                }
+            }
+        }
+
+        return items;
+    }
+
+    @Override
+    public List<Schedule> getFullScheduleByDate(String date) throws SQLException {
+        List<Schedule> items = new ArrayList<Schedule>();
+        String selectSql = String.format(
+                "select s.Id, s.TeacherId,s.CourseId,s.StartTime,s.EndTime,s.Capacity,t.Name,c.Name from Schedule s " +
+                "left join Teacher t on s.TeacherId=t.id " +
+                "left join Course c on s.CourseId=c.id " +
+                "where substr(s.StartTime, 1, 10) = '%s'", date);
+
+        selectSql += " order by s.StartTime asc";
+
+        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try (ResultSet rs = stmt.executeQuery(selectSql)) {
+                    while (rs.next()) {
+                        int i = 1;
+                        Schedule item = new Schedule();
+                        item.setId(rs.getString(i++));
+                        item.setTeacherId(rs.getString(i++));
+                        item.setCourseId(rs.getString(i++));
+                        item.setStartDateTime(rs.getString(i++));
+                        item.setEndDateTime(rs.getString(i++));
+                        item.setCapacity(rs.getInt(i++));
+                        item.setTeacherName(rs.getString(i++));
+                        item.setCourseName(rs.getString(i++));
+                        item.setOrderList(orderDaoImp.getOrdersByScheduleId(item.getId()));
                         items.add(item);
                     }
                 }

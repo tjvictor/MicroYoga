@@ -126,6 +126,29 @@ public class OrderDaoImp extends BaseDao implements OrderDao {
     }
 
     @Override
+    public List<Order> getOrdersByScheduleId(String scheduleId) throws SQLException {
+        List<Order> items = new ArrayList<Order>();
+        String selectSql = String.format("select a.Id, a.ScheduleId, a.MemberId, a.DateTime, b.Name from Orders a left join Member b on a.MemberId = b.Id where a.ScheduleId = '%s'", scheduleId);
+        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try (ResultSet rs = stmt.executeQuery(selectSql)) {
+                    while (rs.next()) {
+                        int i = 1;
+                        Order item = new Order();
+                        item.setId(rs.getString(i++));
+                        item.setScheduleId(rs.getString(i++));
+                        item.setMemberId(rs.getString(i++));
+                        item.setDateTime(rs.getString(i++));
+                        item.setMemberName(rs.getString(i++));
+                        items.add(item);
+                    }
+                }
+            }
+        }
+        return items;
+    }
+
+    @Override
     public void insertOrder(Order order) throws SQLException {
         String insertSql = String.format("insert into Orders values('%s','%s','%s', '%s');",
                 order.getId(), order.getScheduleId(), order.getMemberId(), order.getDateTime());

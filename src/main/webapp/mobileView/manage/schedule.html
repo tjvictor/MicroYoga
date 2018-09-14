@@ -1,19 +1,98 @@
 <script>
-	$(function () {
-        $("#date").calendar({
-            dateFormat: 'yyyy-mm-dd',
-            onChange: function (p, values, displayValues) {
-                console.log(values, displayValues);
-            }
-        });
+    $(function() {
+        scheduleInit();
     });
 </script>
 
-<div class="weui-cells weui-cells_form">
-    <div class="weui-cell">
-        <div class="weui-cell__hd"><label for="date" class="weui-label">开始日期: </label></div>
-        <div class="weui-cell__bd">
-            <input class="weui-input" id="date" type="text">
+<div class="bd">
+    <div class="page__bd">
+        <div class="weui-cells__title">遇见瑜伽生活馆---约课管理页面</div>
+        <div class="weui-cells">
+            <div class="weui-cell weui-cell_swiped" id="add_swiped">
+                <div class="weui-cell__bd">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <p>向左滑动来新增或是删除课程</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell__ft">
+                    <a class="weui-swiped-btn weui-swiped-btn_warn open_schedule_new_dialog" href="javascript:">新增</a>
+                </div>
+            </div>
+            <div>
+                <div class="weui-cell" style="border-top: 1px solid #e5e5e5;">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 130px;">
+                        请选择查询日期
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="searchDate" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="scheduleView" style="border-top: 1px solid #e5e5e5;">
+
+            </div>
         </div>
+    </div>
+</div>
+
+<div id="full-popup-container" class='weui-popup__container' data-history="false">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="weui-cells">
+            <div style="padding:20px;">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        课程名
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="course" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        教练
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="teacher" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        开始
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="start" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        结束
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="end" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        可约
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="capacity" class="weui-input" type="number" pattern="[0-9]*"  placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cell orderView">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        已约
+                    </div>
+                    <div class="weui-cell__bd orderItem" style="padding-left: 15px;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="javascript:;" class="weui-btn weui-btn_primary add_schedule_btn" style="display:none">新增</a>
+        <a href="javascript:;" class="weui-btn weui-btn_warn close-popup">关闭</a>
     </div>
 </div>

@@ -12,6 +12,8 @@ public interface ScheduleDao {
 
     List<Schedule> getSchedulesByFilter(String courseId, String teacherId, String startDate, String endDate) throws SQLException, ParseException;
 
+    List<Schedule> getFullScheduleByDate(String date) throws SQLException;
+
     void insertSchedule(Schedule schedule) throws SQLException;
 
     void updateSchedule(Schedule schedule) throws SQLException;

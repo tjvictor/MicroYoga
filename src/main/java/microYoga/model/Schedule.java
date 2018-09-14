@@ -1,5 +1,8 @@
 package microYoga.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Schedule {
     public String getId() {
         return id;
@@ -87,6 +90,19 @@ public class Schedule {
     private String startDateTime;
     private String endDateTime;
     private int capacity;
+    private List<Order> orderList;
+
+    public Schedule(){
+        this.orderList = new ArrayList<Order>();
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
+    }
 
     public int getCourseRating() {
         return courseRating;

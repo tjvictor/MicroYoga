@@ -1,0 +1,55 @@
+<script>
+    $(function() {
+        notificationInit();
+    });
+</script>
+
+<div class="bd">
+    <div class="page__bd">
+        <div class="weui-cells__title">遇见瑜伽生活馆---通知管理页面</div>
+        <div class="weui-cells">
+            <div class="weui-cell weui-cell_swiped" id="add_swiped">
+                <div class="weui-cell__bd">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <p>向左滑动来新增或是删除通知</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cell__ft">
+                    <a class="weui-swiped-btn weui-swiped-btn_warn open_notification_new_dialog" href="javascript:">新增</a>
+                </div>
+            </div>
+            <div class="notificationView" style="border-top: 1px solid #e5e5e5;">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="full-popup-container" class='weui-popup__container' data-history="false">
+    <div class="weui-popup__overlay"></div>
+    <div class="weui-popup__modal">
+        <div class="weui-cells">
+            <div style="padding:20px;">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd" style="border-right:1px solid #e5e5e5;width: 80px;">
+                        标题
+                    </div>
+                    <div class="weui-cell__bd" style="padding-left: 15px;">
+                        <input id="title" class="weui-input" type="text" placeholder="">
+                    </div>
+                </div>
+                <div class="weui-cells weui-cells_form">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd">
+                            <textarea id="content" class="weui-textarea" placeholder="通知内容" rows="15"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="javascript:;" class="weui-btn weui-btn_primary add_notification_btn" style="display:none">新增</a>
+        <a href="javascript:;" class="weui-btn weui-btn_warn close-popup">关闭</a>
+    </div>
+</div>
