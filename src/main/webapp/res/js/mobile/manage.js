@@ -235,12 +235,9 @@ function deleteNotificationCallback(data) {
 
 //schedule start
 function scheduleInit(){
-    $("#start").calendar({
-        dateFormat: 'yyyy-mm-dd'
-    });
-    $("#end").calendar({
-        dateFormat: 'yyyy-mm-dd'
-    });
+    $('.weui-cell_swiped').swipeout();
+    $("#start").datetimePicker();
+    $("#end").datetimePicker();
     $("#searchDate").calendar({
         dateFormat: 'yyyy-mm-dd',
         onChange: function (p, values, displayValues) {
@@ -277,8 +274,8 @@ function scheduleInit(){
         var postValue = {
             "courseId": courseId,
             "teacherId": teacherId,
-            "start": start,
-            "end": end,
+            "startTime": start,
+            "endTime": end,
             "capacity": capacity,
         };
 
@@ -309,12 +306,12 @@ function getFullScheduleByDateCallback(data) {
 
             $('#course').val(data.courseName);
             $('#teacher').val(data.teacherName);
-            $('#start').val(data.startTime);
-            $('#end').val(data.endTime);
+            $('#start').val(data.startDateTime);
+            $('#end').val(data.endDateTime);
             $('#capacity').val(data.capacity);
             var template = '';
             for(var i = 0 ; i < data.orderList.length ; i++){
-                template += '<p>'+data.orderList.memberName+'</p>';
+                template += '<p>'+data.orderList[i].memberName+'</p>';
             }
             if(template === ''){
                 template = '暂时无人预约';
@@ -328,26 +325,32 @@ function getFullScheduleByDateCallback(data) {
 function getCoursesCallback(data){
     if (data.status == "ok") {
         var list = [];
-        for(var i = 0 ; i < data.callBackData ; i++){
-            list.push({title: data.callBackData[i].courseName, value: data.callBackData[i].courseId});
+        for(var i = 0 ; i < data.callBackData.length ; i++){
+            list.push({title: data.callBackData[i].name, value: data.callBackData[i].id});
         }
 
         $('#course').select({
             title: '选择课程',
-            items: list
+            items: list,
+            onChange: function(d) {
+                $('#course').data("id", d.values);
+            }
         });
     }
 }
 function getTeachersCallback(data){
     if (data.status == "ok") {
         var list = [];
-        for(var i = 0 ; i < data.callBackData ; i++){
-            list.push({title: data.callBackData[i].teacherName, value: data.callBackData[i].teacherId});
+        for(var i = 0 ; i < data.callBackData.length ; i++){
+            list.push({title: data.callBackData[i].name, value: data.callBackData[i].id});
         }
 
         $('#teacher').select({
             title: '选择教练',
-            items: list
+            items: list,
+            onChange: function(d) {
+                $('#teacher').data("id", d.values);
+            }
         });
     }
 }

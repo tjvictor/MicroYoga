@@ -147,9 +147,40 @@ public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
     }
 
     @Override
+    public Schedule getFullScheduleById(String id) throws SQLException {
+        Schedule item = new Schedule();
+        String selectSql = String.format(
+                "select s.Id, s.TeacherId,s.CourseId,s.StartTime,s.EndTime,s.Capacity,t.Name,c.Name from Schedule s " +
+                        "left join Teacher t on s.TeacherId=t.id " +
+                        "left join Course c on s.CourseId=c.id " +
+                        "where s.Id = '%s'", id);
+
+        try (Connection connection = DriverManager.getConnection(dbConnectString)) {
+            try (Statement stmt = connection.createStatement()) {
+                try (ResultSet rs = stmt.executeQuery(selectSql)) {
+                    if (rs.next()) {
+                        int i = 1;
+                        item.setId(rs.getString(i++));
+                        item.setTeacherId(rs.getString(i++));
+                        item.setCourseId(rs.getString(i++));
+                        item.setStartDateTime(rs.getString(i++));
+                        item.setEndDateTime(rs.getString(i++));
+                        item.setCapacity(rs.getInt(i++));
+                        item.setTeacherName(rs.getString(i++));
+                        item.setCourseName(rs.getString(i++));
+                        item.setOrderList(orderDaoImp.getOrdersByScheduleId(item.getId()));
+                    }
+                }
+            }
+        }
+
+        return item;
+    }
+
+    @Override
     public void insertSchedule(Schedule schedule) throws SQLException {
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
-            String insertSql = "insert into Schedule values(?,?,?,?,?,?,?)";
+            String insertSql = "insert into Schedule values(?,?,?,?,?,?)";
             try (PreparedStatement ps = connection.prepareStatement(insertSql)) {
                 int i = 1;
                 ps.setString(i++, schedule.getId());
@@ -182,12 +213,6 @@ public class ScheduleDaoImp extends BaseDao implements ScheduleDao {
 
     @Override
     public void deleteSchedule(String id) throws SQLException {
-        String deleteSql = String.format("update Schedule set IsDel=1 where id = '%s'", id);
-        delete(deleteSql);
-    }
-
-    @Override
-    public void physicalDeleteSchedule(String id) throws SQLException {
         String deleteSql = String.format("delete from Schedule where id = '%s'", id);
         delete(deleteSql);
     }

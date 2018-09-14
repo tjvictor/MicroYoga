@@ -603,6 +603,8 @@ public class webServices {
 
         try {
             scheduleDaoImp.insertSchedule(item);
+
+            item = scheduleDaoImp.getFullScheduleById(item.getId());
             return new ResponseObject("ok", "插入成功", item);
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
