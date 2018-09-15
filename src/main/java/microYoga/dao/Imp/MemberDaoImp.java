@@ -143,7 +143,7 @@ public class MemberDaoImp extends BaseDao implements MemberDao {
 
     @Override
     public Member authenticateUser(String tel, String password) throws SQLException {
-        String selectSql = String.format("select Id, Name, Sex, Tel, JoinDate, ExpireDate, Fee, Remark from Member where Tel = '%s' and Password = '%s';", tel, password);
+        String selectSql = String.format("select Id, Name, Sex, Tel, JoinDate, ExpireDate, Fee, Remark, WeChat from Member where Tel = '%s' and Password = '%s';", tel, password);
 
         try (Connection connection = DriverManager.getConnection(dbConnectString)) {
             try (Statement stmt = connection.createStatement()) {
@@ -159,6 +159,7 @@ public class MemberDaoImp extends BaseDao implements MemberDao {
                         member.setExpireDate(rs.getString(i++));
                         member.setFee(rs.getInt(i++));
                         member.setRemark(rs.getString(i++));
+                        member.setWeChat(rs.getString(i++));
                         return member;
                     }
 

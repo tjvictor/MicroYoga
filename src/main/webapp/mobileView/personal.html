@@ -1,14 +1,89 @@
 <script>
     $(function () {
-        checkUser();
+        var user = checkUser();
+        $('#name').text(user.name);
+        $('#sex').text(user.sex);
+        $('#tel').text(user.tel);
+        $('#weChat').text(user.weChat);
+        $('#joinDate').text(user.joinDate);
+        $('#expireDate').text(user.expireDate);
+        $('#fee').text(user.fee);
+        $('#remark').text(user.remark);
     });
+
+
 </script>
 
-<div>
-    <h1>
-        个人中心功能暂未开放
-    </h1>
-    <div>
-        <a href="javascript:;" onclick="logout()" class="weui-btn weui-btn_primary">注销</a>
+
+<div class="page__bd">
+    <div class="weui-cells__title">遇见瑜伽生活馆---会员中心</div>
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__hd" style="border-right: 1px solid #e5e5e5;width: 80px;">
+                <p>姓名</p>
+            </div>
+            <div class="weui-cell__bd" style="padding-left: 30px;">
+                <p id="name"></p>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd" style="border-right: 1px solid #e5e5e5;width: 80px;">
+                <p>性别</p>
+            </div>
+            <div class="weui-cell__bd" style="padding-left: 30px;">
+                <p id="sex"></p>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd" style="border-right: 1px solid #e5e5e5;width: 80px;">
+                <p>手机</p>
+            </div>
+            <div class="weui-cell__bd" style="padding-left: 30px;">
+                <p id="tel"></p>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd" style="border-right: 1px solid #e5e5e5;width: 80px;">
+                <p>微信</p>
+            </div>
+            <div class="weui-cell__bd" style="padding-left: 30px;">
+                <p id="weChat"></p>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd" style="border-right: 1px solid #e5e5e5;width: 80px;">
+                <p>注册</p>
+            </div>
+            <div class="weui-cell__bd" style="padding-left: 30px;">
+                <p id="joinDate"></p>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd" style="border-right: 1px solid #e5e5e5;width: 80px;">
+                <p>到期</p>
+            </div>
+            <div class="weui-cell__bd" style="padding-left: 30px;">
+                <p id="expireDate"></p>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd" style="border-right: 1px solid #e5e5e5;width: 80px;">
+                <p>费用</p>
+            </div>
+            <div class="weui-cell__bd" style="padding-left: 30px;">
+                <p id="fee"></p>
+            </div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__hd" style="border-right: 1px solid #e5e5e5;width: 80px;">
+                <p>备注</p>
+            </div>
+            <div class="weui-cell__bd" style="padding-left: 30px;">
+                <p id="remark"></p>
+            </div>
+        </div>
     </div>
+</div>
+<div>
+    <a href="javascript:;" onclick="logout()" class="weui-btn weui-btn_primary">注销</a>
 </div>
