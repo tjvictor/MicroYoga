@@ -24,6 +24,9 @@
                 direction: 'vertical',
                 watchSlidesProgress : true,
                 on: {
+                    slideChange: function(){
+                        alert(this.activeIndex);
+                    },
                     slideChangeTransitionStart: function(){
 
                     },
