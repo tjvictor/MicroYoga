@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" style="height:100%;">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <link rel="stylesheet" href="res/css/swiper.min.css">
+    <script src="res/js/jquery-3.3.1.js"></script>
+    <script src="res/js/swiper.js"></script>
+    <style>
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
+    <script>
+        $(function (){
+            var mySwiper = new Swiper ('.swiper-container', {
+                direction: 'vertical',
+                watchSlidesProgress : true,
+                on: {
+                    slideChangeTransitionStart: function(){
+
+                    },
+                    slideChangeTransitionEnd: function(){
+
+                    },
+                    progress: function(progress){
+
+                        var s0 = this.slides[0].progress;
+                        var s1 = this.slides[1].progress;
+                        var s2 = this.slides[2].progress;
+
+                        s0 = s0<=0?1+s0:1-s0;
+                        s1 = s1<=0?1+s1:1-s1;
+                        s2 = s2<=0?1+s2:1-s2;
+
+                        this.slides[0].style.opacity=s0;
+                        this.slides[1].style.opacity=s1;
+                        this.slides[2].style.opacity=s2;
+
+
+                    },
+                },
+                //loop: true,
+
+                // 如果需要分页器
+                //pagination: {
+                //  el: '.swiper-pagination',
+                //},
+
+                // 如果需要前进后退按钮
+                //navigation: {
+                //  nextEl: '.swiper-button-next',
+                //  prevEl: '.swiper-button-prev',
+                //},
+
+                // 如果需要滚动条
+                //scrollbar: {
+                //  el: '.swiper-scrollbar',
+                //},
+            })
+        });
+    </script>
+</head>
+<body  style="height:100%;">
+    <div style="position:absolute;top:200px;z-index:100;">
+        <div id="p0">0</div>
+        <div id="p1">1</div>
+        <div id="p2">2</div>
+    </div>
+    <div class="swiper-container" style="height:100%;">
+        <div class="swiper-wrapper" style="height:100%;">
+            <div class="swiper-slide" style="height:100%;background-color:#4390EE">Slide 1
+            </div>
+            <div class="swiper-slide" style="height:100%;background-color:#CA4040">Slide 2
+            </div>
+            <div class="swiper-slide" style="height:100%;background-color:#FF8604">Slide 3
+            </div>
+        </div>
+        <!-- 如果需要分页器
+        <div class="swiper-pagination"></div>-->
+
+        <!-- 如果需要导航按钮
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>-->
+
+        <!-- 如果需要滚动条
+        <div class="swiper-scrollbar"></div>-->
+    </div>
+
+</body>
+</html>
